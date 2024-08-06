@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/m1"
+        android:title="메인페이지" />
+    <item
+        android:id="@+id/m2"
+        android:title="식물관리" />
+    <item
+        android:id="@+id/m3"
+        android:title="마이페이지" />
+</menu>
