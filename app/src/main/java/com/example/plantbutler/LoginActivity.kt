@@ -18,6 +18,7 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
 
+
 class LoginActivity : AppCompatActivity() {
 
     lateinit var queue: RequestQueue
@@ -29,7 +30,10 @@ class LoginActivity : AppCompatActivity() {
         // 레이아웃 요소들을 변수에 할당
         val mainLayout = findViewById<ConstraintLayout>(R.id.main)
         val btnLogin = findViewById<Button>(R.id.btnLogin)
+        val btnJoin = findViewById<Button>(R.id.btnJoin)
+
         val loginFormContainer = findViewById<ConstraintLayout>(R.id.loginFormContainer)
+        val joinFormContainer = findViewById<ConstraintLayout>(R.id.joinFormContainer)
         val btnClose = findViewById<ImageView>(R.id.btnClose)
 
         // 로그인 버튼 클릭 시 로그인 폼을 애니메이션으로 표시
@@ -38,6 +42,12 @@ class LoginActivity : AppCompatActivity() {
             btnLogin.visibility = View.GONE
             loginFormContainer.visibility = View.VISIBLE
         }
+        // 회원가입
+        btnJoin.setOnClickListener {
+            val intent = Intent(this,JoinActivity::class.java)
+            startActivity(intent)
+        }
+
 
         // 닫기 버튼 클릭 시 로그인 폼을 애니메이션으로 숨김
         btnClose.setOnClickListener {
@@ -46,13 +56,13 @@ class LoginActivity : AppCompatActivity() {
             loginFormContainer.visibility = View.GONE
         }
 
-        // 로그인 변수
-        val etLoginId = findViewById<EditText>(R.id.etLoginId)
-        val etLoginPw = findViewById<EditText>(R.id.etLoginPw)
-        val btnLoginAct = findViewById<Button>(R.id.loginButton)
+        // 로그인, 회원가입 변수
+        val etLoginId = findViewById<EditText>(R.id.etJoinId)
+        val etLoginPw = findViewById<EditText>(R.id.etJoinPw)
+        val btnLoginAct = findViewById<Button>(R.id.joinButton)
 
         queue  = Volley.newRequestQueue(this)
-
+        // 로그인
         btnLoginAct.setOnClickListener {
             val inputId = etLoginId.text.toString()
             val inputPw = etLoginPw.text.toString()
@@ -66,16 +76,28 @@ class LoginActivity : AppCompatActivity() {
                     val intent = Intent(this,MainActivity::class.java)
 
                     if(response.toString()!=""){
-                        Toast.makeText(applicationContext,"로그인성공",Toast.LENGTH_SHORT).show()
+
                         intent.putExtra("member",response.toString())
+                        val member = Gson().fromJson(intent.getStringExtra("member"),Member::class.java)
+                        // 로그인 회원정보 저장
+                        val sharedPreferences = getSharedPreferences("member", MODE_PRIVATE)
+                        val editor = sharedPreferences.edit()
+                        // id,nick,img
+                        editor.putString("memId", member.id)
+                        editor.putString("memNick", member.nick)
+                        editor.putString("memImg",member.img)
+                        editor.apply()
+
+                        Toast.makeText(applicationContext,"${member.nick}님 환영!",Toast.LENGTH_SHORT).show()
+
                         startActivity(intent)
                         finish()
 
                     }else{
-                        Toast.makeText(applicationContext,"로그인실패",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(applicationContext,"아이디나 비밀번호를 확인해주세요",Toast.LENGTH_SHORT).show()
                     }
                     finishAffinity()
-                    startActivity(intent)
+
                 },
                 {error->
                     Log.d("error",error.toString())

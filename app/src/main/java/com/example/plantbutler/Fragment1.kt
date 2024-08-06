@@ -2,22 +2,29 @@ package com.example.plantbutler
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.json.JSONArray
 import java.lang.reflect.Type
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 class Fragment1 : Fragment() {
 
@@ -51,29 +58,43 @@ class Fragment1 : Fragment() {
 
         val request = StringRequest(
             Request.Method.POST,
-            "http://192.168.219.60:8089/plantbutler/postlist",
+            "http://192.168.219.60:8089/plantbutler/post",
             {response ->
                 Log.d("response", response.toString())
                 val jsonArray = JSONArray(response)
-                val postListType: Type = object : TypeToken<List<PostVO>>() {}.type
-                val result: ArrayList<PostVO> = Gson().fromJson(jsonArray.toString(), postListType)
-                for(i in 0 until result.size) {
-                    if(result[i].img != null) {
-                        postList.add(result[i])
+
+                for(i in 0 until jsonArray.length()) {
+                    val result = jsonArray.getJSONObject(i)
+                    val idx = result.getString("idx").toInt()
+                    val nick = result.getJSONObject("member").getString("nick")
+                    val content = result.getString("content")
+                    val views = result.getString("views").toInt()
+                    val title = result.getString("title")
+                    val date = result.getString("date")
+                    val img: String
+
+                    if(result.getString("img") != null) {
+                        img = result.getString("img")
                     }else {
-                        postList.add(PostVO(result[i].idx, result[i].id, "",
-                            result[i].content, result[i].views, result[i].title, result[i].date))
+                        img = ""
                     }
+                    postList.add(PostVO(idx, nick, img, content, views, title, date))
 
                     adapter.notifyDataSetChanged()
                 }
-                Log.d("result", result.toString())
             },
             {error ->
                 Log.d("error", error.toString())
             }
         )
         queue.add(request)
+
+        val btnPostAdd: Button = view.findViewById(R.id.btnPostAdd)
+
+        btnPostAdd.setOnClickListener {
+            val fragment = AddPost()
+            (context as MainActivity).replaceFragment(fragment)
+        }
 
         return view
     }

@@ -1,7 +1,9 @@
 package com.example.plantbutler
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.BitmapFactory
+import android.os.Bundle
 import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView
 import org.w3c.dom.Text
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 class PostAdapter(var context: Context, var postList: ArrayList<PostVO>)
     : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
@@ -51,9 +55,13 @@ class PostAdapter(var context: Context, var postList: ArrayList<PostVO>)
         holder.tvPostTitle.setText(postList.get(position).title)
         holder.tvPostText.setText(postList.get(position).content)
 
-        val byteString = Base64.decode(postList.get(position).img, Base64.DEFAULT)
-        val byteArray = BitmapFactory.decodeByteArray(byteString, 0, byteString.size)
-        holder.ivPostImg.setImageBitmap(byteArray)
+        if(postList.get(position).img != null) {
+            val byteString = Base64.decode(postList.get(position).img, Base64.DEFAULT)
+            val byteArray = BitmapFactory.decodeByteArray(byteString, 0, byteString.size)
+            holder.ivPostImg.setImageBitmap(byteArray)
+        }else {
+            holder.ivPostImg.setVisibility(View.GONE)
+        }
 
         val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
         val outputFormat = SimpleDateFormat("yyyy-MM-dd")
@@ -65,7 +73,30 @@ class PostAdapter(var context: Context, var postList: ArrayList<PostVO>)
         holder.tvPostNick.setText(postList.get(position).id)
 
         holder.clPost.setOnClickListener{
+            val fragment = PostDetail()
+            val args = Bundle()
+            postList.get(position).idx?.let { idx -> args.putInt("idx", idx) }
+            args.putString("title", postList.get(position).title)
+            postList.get(position).views?.let { views -> args.putInt("views", views) }
+            args.putString("id", postList.get(position).id)
+            args.putString("img", postList.get(position).img)
 
+            // 날짜 변환
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+            inputFormat.timeZone = TimeZone.getTimeZone("UTC") // 입력 시간대 설정
+
+            val outputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+            outputFormat.timeZone = TimeZone.getDefault() // 출력 시간대 설정 (기본 시간대)
+
+            val date = inputFormat.parse(postList[position].date) ?: Date()
+            val formatDate = outputFormat.format(date)
+
+            args.putString("date", formatDate)
+            args.putString("content", postList.get(position).content)
+
+            fragment.arguments = args
+
+            (context as MainActivity).replaceFragment(fragment)
         }
     }
 
