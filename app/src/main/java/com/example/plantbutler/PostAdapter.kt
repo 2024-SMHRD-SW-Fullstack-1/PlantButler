@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.green
 import androidx.recyclerview.widget.RecyclerView
 import org.w3c.dom.Text
@@ -23,6 +24,7 @@ class PostAdapter(var context: Context, var postList: ArrayList<PostVO>)
         var tvPostNick: TextView
         var ivPostImg: ImageView
         var tvPostDate: TextView
+        var clPost: ConstraintLayout
 
         init {
             tvPostTitle = itemView.findViewById(R.id.tvPostTitle)
@@ -30,6 +32,7 @@ class PostAdapter(var context: Context, var postList: ArrayList<PostVO>)
             tvPostNick = itemView.findViewById(R.id.tvPostNick)
             ivPostImg = itemView.findViewById(R.id.ivPostImg)
             tvPostDate = itemView.findViewById(R.id.tvPostDate)
+            clPost = itemView.findViewById(R.id.clPost)
         }
     }
 
@@ -60,6 +63,10 @@ class PostAdapter(var context: Context, var postList: ArrayList<PostVO>)
 
         holder.tvPostDate.setText(formatDate)
         holder.tvPostNick.setText(postList.get(position).id)
+
+        holder.clPost.setOnClickListener{
+
+        }
     }
 
 }

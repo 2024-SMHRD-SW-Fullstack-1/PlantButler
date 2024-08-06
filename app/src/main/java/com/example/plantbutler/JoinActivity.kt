@@ -34,7 +34,7 @@ class JoinActivity : AppCompatActivity() {
             val inputId = etId.text.toString()
             val inputPw = etPw.text.toString()
             val inputNick = etNick.text.toString()
-            val pm = PlantMember(inputId,inputPw,inputNick,null)
+            val pm = Member(inputId,inputPw,inputNick,null)
 
             val request = object: StringRequest(
                 Request.Method.POST,
@@ -52,7 +52,7 @@ class JoinActivity : AppCompatActivity() {
                 override fun getParams():MutableMap<String,String>{
                     val params:MutableMap<String,String> = HashMap<String,String>()
 
-                    params.put("PlantMember", Gson().toJson(pm))
+                    params.put("Member", Gson().toJson(pm))
                     return params
                 }
             }

@@ -148,6 +148,7 @@
             android:layout_margin="16dp"
             android:backgroundTint="#B5FFB4"
             android:text="로그인"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/etLoginPw" />

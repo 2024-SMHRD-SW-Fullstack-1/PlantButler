@@ -56,11 +56,11 @@ class LoginActivity : AppCompatActivity() {
         btnLoginAct.setOnClickListener {
             val inputId = etLoginId.text.toString()
             val inputPw = etLoginPw.text.toString()
-            val pm = PlantMember(inputId,inputPw,null,null)
+            val pm = Member(inputId,inputPw,null,null)
 
             val request = object: StringRequest(
                 Request.Method.POST,
-                "http://192.168.219.61:8089/plantbutler/login",
+                "http://192.168.219.60:8089/plantbutler/login",
                 {response->
                     Log.d("response",response.toString())
                     val intent = Intent(this,MainActivity::class.java)
@@ -83,7 +83,7 @@ class LoginActivity : AppCompatActivity() {
             ){
                 override fun getParams():MutableMap<String,String>{
                     val params:MutableMap<String,String> = HashMap<String,String>()
-                    params.put("PlantMember", Gson().toJson(pm))
+                    params.put("Member", Gson().toJson(pm))
 
                     return params
                 }
