@@ -17,7 +17,6 @@ class SplashActivity : AppCompatActivity() {
             // 앱이 처음 실행된 경우 회원가입 화면으로 전환
             if (SessionManager.isFirstRun(this)) {
                 // 회원가입 액티비티로 이동
-                startActivity(Intent(this, SignupActivity::class.java))
                 // 첫 실행 여부를 false로 설정
                 SessionManager.setFirstRun(this, false)
             } else {
@@ -26,6 +25,6 @@ class SplashActivity : AppCompatActivity() {
             }
             // 현재 액티비티 종료
             finish()
-        }, 1500) // 2초 후 실행
+        }, 1500) // 1.5초 후 실행
     }
 }

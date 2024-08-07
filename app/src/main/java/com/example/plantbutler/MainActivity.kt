@@ -1,28 +1,60 @@
 package com.example.plantbutler
 
-import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
+import android.widget.FrameLayout
+import android.widget.ListView
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import android.widget.Button
-import android.widget.Toast
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.Request
+import com.android.volley.RequestQueue
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import org.json.JSONArray
+import org.json.JSONObject
+import java.lang.reflect.Type
 
 class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // 회원가입 버튼 추가
-        val signupButton = findViewById<Button>(R.id.signupButton)
-        signupButton.setOnClickListener {
-            startActivity(Intent(this, SignupActivity::class.java))
+        val mainContent = findViewById<FrameLayout>(R.id.mainContent)
+        val bnv = findViewById<BottomNavigationView>(R.id.bnv)
+
+        supportFragmentManager.beginTransaction().replace(
+            mainContent.id, Fragment1()).commit()
+
+        bnv.setOnItemSelectedListener { // item : 선택한 메뉴 (아이디)
+                item ->
+            when(item.itemId) {
+                R.id.m1 -> {
+                    supportFragmentManager.beginTransaction().replace(
+                        mainContent.id, Fragment1()).commit()
+                }
+                R.id.m2 -> {
+                    supportFragmentManager.beginTransaction().replace(
+                        mainContent.id, Fragment2()).commit()
+                }
+                R.id.m3 -> {
+                    supportFragmentManager.beginTransaction().replace(
+                        mainContent.id, Fragment3()).commit()
+                }
+            }
+            true
         }
 
-        // 로그아웃 버튼 클릭 리스너
-        val logoutButton = findViewById<Button>(R.id.logoutButton)
-        logoutButton.setOnClickListener {
-            SessionManager.setLogin(this, false)
-            Toast.makeText(this, "로그아웃 되었습니다", Toast.LENGTH_SHORT).show()
-            finish()
-        }
+
+
     }
+
 }

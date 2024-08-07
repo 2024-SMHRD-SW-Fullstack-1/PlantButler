@@ -23,19 +23,22 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".PlantAddActivity"
+            android:name=".TimelineActivity"
             android:exported="false" />
         <activity
-            android:name=".ExplainActivity"
+            android:name=".AddNoteActivity"
             android:exported="false" />
         <activity
-            android:name=".SignupActivity"
+            android:name=".PlantDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".JoinActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PostDetail"
             android:exported="false" />
         <activity
             android:name=".Fragment2"
@@ -44,7 +47,7 @@
             android:name=".Fragment1"
             android:exported="false" />
         <activity
-            android:name=".SplashActivity"
+            android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -52,6 +55,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".PlantAddActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

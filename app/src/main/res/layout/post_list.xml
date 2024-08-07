@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/clPost"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/tvPostTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="키우던 바질과 이별했어요.."
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvPostText"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:text="바질이 하루 아침에 제 곁을 떠났습니다 ㅠㅠ.\n과습인걸까요.. 요즘 날씨가 더워서일까요 ㅠㅠ\n초보 식집사는 어렵네요..."
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvPostTitle" />
+
+    <ImageView
+        android:id="@+id/ivPostImg"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@drawable/rounded_corners"
+        app:layout_constraintBottom_toTopOf="@+id/tvPostDate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/tvPostText"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/plant1" />
+
+    <TextView
+        android:id="@+id/tvPostDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2024.08.04"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/ivPostImg"
+        app:layout_constraintStart_toStartOf="@+id/ivPostImg" />
+
+    <TextView
+        android:id="@+id/tvPostNick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="식집사"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/tvPostDate"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvPostText" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

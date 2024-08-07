@@ -1,50 +1,80 @@
 package com.example.plantbutler
 
+import android.app.Activity
 import android.app.DatePickerDialog
-import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
-import java.util.*
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.Request
+import com.android.volley.toolbox.JsonArrayRequest
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
+import com.google.gson.Gson
+import org.json.JSONArray
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class PlantAddActivity : AppCompatActivity() {
+
+    private var memberId: String? = null
+    private lateinit var etPlantName: EditText
+    private lateinit var etGoal: EditText
+    private lateinit var etDate: EditText
+    private lateinit var rvPlants: RecyclerView
+    private lateinit var plantAdapter: PlantAdapter
+    private val plantList = mutableListOf<Plant>()
+    private var selectedPlantIdx: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_plant_add)
 
+        memberId = intent.getStringExtra("memberId")
+
         val btnClose = findViewById<ImageView>(R.id.btnClose)
         val btnCheck = findViewById<ImageView>(R.id.btnCheck)
 
+        etPlantName = findViewById(R.id.etPlantName)
+        etGoal = findViewById(R.id.etGoal)
+        etDate = findViewById(R.id.etDate)
+        rvPlants = findViewById(R.id.rvPlants)
+        rvPlants.layoutManager = LinearLayoutManager(this)
+
+        plantAdapter = PlantAdapter(plantList, object : PlantAdapter.OnItemClickListener {
+            override fun onItemClick(position: Int) {
+                selectedPlantIdx = plantList[position].id
+                plantAdapter.notifyDataSetChanged()
+            }
+        })
+        rvPlants.adapter = plantAdapter
+
         btnClose.setOnClickListener {
-            // 식물 리스트 화면으로 돌아가기
             finish()
         }
 
         btnCheck.setOnClickListener {
-            // 애칭, 목표 등 입력 값 확인 및 저장 로직
-            val plantNickname = findViewById<EditText>(R.id.plantNicknameEditText).text.toString()
-            val plantGoal = findViewById<EditText>(R.id.plantGoalEditText).text.toString()
-            val plantDate = findViewById<TextView>(R.id.plantDateTextView).text.toString()
+            val plantNickname = etPlantName.text.toString()
+            val plantGoal = etGoal.text.toString()
+            val plantDate = etDate.text.toString()
 
-            if (plantNickname.isNotEmpty() && plantGoal.isNotEmpty() && plantDate.isNotEmpty()) {
-                // 식물 추가 로직
-                Toast.makeText(this, "식물 추가 완료", Toast.LENGTH_SHORT).show()
-                // 식물 리스트 화면으로 돌아가기
-                finish()
+            if (plantNickname.isNotEmpty() && plantGoal.isNotEmpty() && plantDate.isNotEmpty() && selectedPlantIdx != -1) {
+                addPlantToServer(selectedPlantIdx, plantNickname, plantGoal, plantDate)
             } else {
                 Toast.makeText(this, "모든 항목을 입력하세요", Toast.LENGTH_SHORT).show()
             }
         }
 
-        // 날짜 선택 TextView 클릭 이벤트
-        findViewById<TextView>(R.id.plantDateTextView).setOnClickListener {
+        etDate.setOnClickListener {
             showDatePickerDialog()
         }
+
+        loadPlantsFromServer()
     }
 
     private fun showDatePickerDialog() {
@@ -55,15 +85,90 @@ class PlantAddActivity : AppCompatActivity() {
 
         val datePickerDialog = DatePickerDialog(
             this,
-            android.R.style.Theme_Material_Light_Dialog_Alert,
             { _, selectedYear, selectedMonth, selectedDay ->
-                val selectedDate = "$selectedYear-${selectedMonth + 1}-$selectedDay"
-                findViewById<TextView>(R.id.textView).text = selectedDate
+                val calendar = Calendar.getInstance()
+                calendar.set(selectedYear, selectedMonth, selectedDay)
+                val date = calendar.time
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                etDate.setText(dateFormat.format(date))
             },
             year, month, day
         )
-
         datePickerDialog.show()
+    }
 
+    private fun loadPlantsFromServer() {
+        val url = "http://192.168.219.41:8089/plantbutler/api/plant_catalog"
+        val queue = Volley.newRequestQueue(this)
+
+        val jsonArrayRequest = JsonArrayRequest(
+            Request.Method.GET, url, null,
+            { response ->
+                parsePlantCatalog(response)
+            },
+            { error ->
+                val errorMessage = error.networkResponse?.data?.let { String(it) } ?: error.message
+                Toast.makeText(this, "Error: $errorMessage", Toast.LENGTH_SHORT).show()
+            }
+        )
+
+        queue.add(jsonArrayRequest)
+    }
+
+    private fun parsePlantCatalog(response: JSONArray) {
+        plantList.clear()
+
+        for (i in 0 until response.length()) {
+            val plantJson = response.getJSONObject(i)
+            val plant = Plant(
+                plantJson.optInt("id", -1),
+                plantJson.optString("name", ""),
+                plantJson.optString("imageUrl", ""),
+                plantJson.optString("content", "")
+            )
+            plantList.add(plant)
+        }
+        plantAdapter.notifyDataSetChanged()
+    }
+
+    private fun addPlantToServer(plantIdx: Int, nickname: String, goal: String, startDate: String) {
+        val queue = Volley.newRequestQueue(this)
+        val url = "http://192.168.219.41:8089/plantbutler/api/plants"
+
+        val myPlant = MyPlant(
+            myplantIdx = -1,
+            memberId = memberId,
+            plantIdx = plantIdx,
+            nickname = nickname,
+            goal = goal,
+            startDate = startDate,
+            imageUrl = null // This can be updated based on your needs
+        )
+        val gson = Gson()
+        val requestBody = gson.toJson(myPlant)
+
+        val stringRequest = object : StringRequest(
+            Request.Method.POST, url,
+            { response ->
+                Log.d("PlantAddActivity", "Response: $response")
+                Toast.makeText(this, "식물 추가 완료", Toast.LENGTH_SHORT).show()
+                setResult(Activity.RESULT_OK)
+                finish()
+            },
+            { error ->
+                Log.e("PlantAddActivity", "Error: ${error.message}")
+                Toast.makeText(this, "에러 발생: ${error.message}", Toast.LENGTH_SHORT).show()
+            }
+        ) {
+            override fun getBody(): ByteArray {
+                return requestBody.toByteArray()
+            }
+
+            override fun getBodyContentType(): String {
+                return "application/json; charset=utf-8"
+            }
+        }
+
+        queue.add(stringRequest)
     }
 }

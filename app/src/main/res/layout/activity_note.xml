@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/white"
+    tools:context=".AddNoteActivity">
+
+    <!-- 설명 텍스트 -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="노트"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- 입력 필드 -->
+    <EditText
+        android:id="@+id/etContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:gravity="top"
+        android:hint="글과 사진으로 상세한 기록을 남겨두세요 :)                 플랜티가 시간순으로 정리해 드려요."
+        android:inputType="textMultiLine"
+        android:maxLines="5"
+        android:minHeight="200dp"
+        android:padding="16dp"
+        android:textSize="16sp"
+        tools:ignore="Autofill" />
+
+    <!-- 글자 수 제한 텍스트 -->
+    <TextView
+        android:id="@+id/tvCharCount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="0/5000"
+        android:gravity="end"
+        android:textSize="14sp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="16dp"
+        android:textColor="@android:color/darker_gray"/>
+
+    <!-- 저장 버튼 -->
+    <Button
+        android:id="@+id/btnSubmit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="저장"
+        android:textSize="16sp"
+        android:backgroundTint="@color/design_default_color_primary"
+        android:textColor="@android:color/white" />
+
+</LinearLayout>
