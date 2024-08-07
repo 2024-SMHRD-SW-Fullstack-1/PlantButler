@@ -1,14 +1,18 @@
 package com.example.plantbutler
 
 import android.content.Intent
+import android.media.Image
 import android.os.Bundle
+import android.os.Handler
 import android.transition.ChangeBounds
 import android.transition.TransitionManager
 import android.util.Log
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -27,7 +31,11 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        // 애니메이션 로드
+        val slideUpAnimation = AnimationUtils.loadAnimation(this, R.anim.slide_up)
+
         // 레이아웃 요소들을 변수에 할당
+        val imageView5: ImageView = findViewById(R.id.imageView5)
         val mainLayout = findViewById<ConstraintLayout>(R.id.main)
         val btnLogin = findViewById<Button>(R.id.btnLogin)
         val btnJoin = findViewById<Button>(R.id.btnJoin)
@@ -36,10 +44,34 @@ class LoginActivity : AppCompatActivity() {
         val joinFormContainer = findViewById<ConstraintLayout>(R.id.joinFormContainer)
         val btnClose = findViewById<ImageView>(R.id.btnClose)
 
+        // 뷰가 처음에는 보이지 않게 설정
+        imageView5.visibility = View.INVISIBLE
+        btnLogin.visibility = View.INVISIBLE
+        btnJoin.visibility = View.INVISIBLE
+
+        // 5초 후에 애니메이션 시작
+        Handler().postDelayed({
+            imageView5.startAnimation(slideUpAnimation)
+            imageView5.visibility = View.VISIBLE
+        }, 3000)
+
+        // 5초 후에 애니메이션 시작
+        Handler().postDelayed({
+            btnLogin.startAnimation(slideUpAnimation)
+            btnLogin.visibility = View.VISIBLE
+        }, 3000)
+
+        // 5초 후에 애니메이션 시작
+        Handler().postDelayed({
+            btnJoin.startAnimation(slideUpAnimation)
+            btnJoin.visibility = View.VISIBLE
+        }, 3000)
+
         // 로그인 버튼 클릭 시 로그인 폼을 애니메이션으로 표시
         btnLogin.setOnClickListener {
             TransitionManager.beginDelayedTransition(mainLayout, ChangeBounds().setDuration(600))
             btnLogin.visibility = View.GONE
+            btnJoin.visibility = View.GONE
             loginFormContainer.visibility = View.VISIBLE
         }
         // 회원가입
@@ -53,6 +85,7 @@ class LoginActivity : AppCompatActivity() {
         btnClose.setOnClickListener {
             TransitionManager.beginDelayedTransition(mainLayout, ChangeBounds().setDuration(600))
             btnLogin.visibility = View.VISIBLE
+            btnJoin.visibility = View.VISIBLE
             loginFormContainer.visibility = View.GONE
         }
 

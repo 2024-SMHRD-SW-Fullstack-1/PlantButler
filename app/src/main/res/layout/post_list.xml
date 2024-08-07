@@ -5,7 +5,10 @@
     android:id="@+id/clPost"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:backgroundTint="#DBD8D8"
     android:padding="8dp">
+
+
 
     <TextView
         android:id="@+id/tvPostTitle"
@@ -46,21 +49,33 @@
         android:id="@+id/tvPostDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="2024.08.04"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/ivPostImg"
-        app:layout_constraintStart_toStartOf="@+id/ivPostImg" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/ivPostImg"
+        app:layout_constraintTop_toBottomOf="@+id/ivPostImg" />
 
     <TextView
         android:id="@+id/tvPostNick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:text="식집사"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/tvPostDate"
+        app:layout_constraintBottom_toBottomOf="@id/view"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvPostText" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvDetailContent"
+        tools:layout_editor_absoluteX="8dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
