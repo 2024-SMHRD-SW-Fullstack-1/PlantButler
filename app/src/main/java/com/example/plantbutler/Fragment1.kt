@@ -1,5 +1,6 @@
 package com.example.plantbutler
 
+import ItemOffsetDecoration
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -54,6 +55,8 @@ class Fragment1 : Fragment() {
         queue = Volley.newRequestQueue(mContext)
 
         adapter = PostAdapter(mContext, postList)
+        val itemDecoration = ItemOffsetDecoration(16) // 마진 값 설정
+        rvPostList.addItemDecoration(itemDecoration)
         rvPostList.adapter = adapter
         rvPostList.layoutManager = LinearLayoutManager(mContext)
 
@@ -85,7 +88,7 @@ class Fragment1 : Fragment() {
             Request.Method.POST,
             "http://192.168.219.60:8089/plantbutler/post",
             {response ->
-                Log.d("response", response.toString())
+                Log.d("postLists", response.toString())
                 val jsonArray = JSONArray(response)
 
                 for(i in 0 until jsonArray.length()) {

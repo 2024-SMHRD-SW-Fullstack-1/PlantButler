@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -65,12 +66,21 @@ class Fragment3 : Fragment() {
         // 닉네임
         val tvNick = view.findViewById<TextView>(R.id.tvNick)
         tvNick.text = memNick+"님"
+
         // 회원정보 수정
         btnEdit = view.findViewById(R.id.btnEdit)
         btnEdit.setOnClickListener {
             val intent = Intent(context,EditActivity::class.java)
             startActivity(intent)
         }
+        // 로그아웃
+        var btnLogout = view.findViewById<Button>(R.id.btnLogout)
+        btnLogout.setOnClickListener {
+            Toast.makeText(mContext, "로그아웃되었습니다", Toast.LENGTH_SHORT).show()
+            val intent = Intent(context,LoginActivity::class.java)
+            startActivity(intent)
+        }
+
 
         queue = Volley.newRequestQueue(mContext)
 

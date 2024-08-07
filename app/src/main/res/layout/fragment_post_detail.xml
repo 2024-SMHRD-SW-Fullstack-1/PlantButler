@@ -20,6 +20,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header"
         tools:layout_editor_absoluteX="16dp">
@@ -29,7 +30,6 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginTop="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/guideline3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvDetailTitle"
             tools:srcCompat="@tools:sample/avatars" />
@@ -49,12 +49,10 @@
             android:id="@+id/tvDetailDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:text="2024-08-06 08:00"
-            app:layout_constraintBottom_toTopOf="@+id/guideline3"
             app:layout_constraintStart_toStartOf="@+id/tvDetailNick"
-            app:layout_constraintTop_toBottomOf="@+id/tvDetailNick"
-            tools:layout_editor_absoluteX="188dp"
-            tools:layout_editor_absoluteY="260dp" />
+            app:layout_constraintTop_toBottomOf="@+id/tvDetailNick" />
 
         <TextView
             android:id="@+id/tvDetailTitle"
@@ -82,13 +80,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ivDetailPostImg" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.15" />
-
         <ImageView
             android:id="@+id/ivDetailPostImg"
             android:layout_width="250dp"
@@ -96,7 +87,7 @@
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guideline3" />
+            app:layout_constraintTop_toBottomOf="@+id/ivDetailImg" />
 
         <TextView
             android:id="@+id/tvDetailViews"
@@ -156,11 +147,19 @@
             android:id="@+id/tvDetailDel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:text="삭제"
             android:textColor="#787878"
+            app:layout_constraintBottom_toBottomOf="@+id/tvDetailUpdate"
+            app:layout_constraintStart_toEndOf="@+id/tvDetailUpdate" />
+
+        <TextView
+            android:id="@+id/tvDetailUpdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="수정"
             app:layout_constraintBottom_toBottomOf="@+id/tvDetailDate"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/tvDetailDate" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

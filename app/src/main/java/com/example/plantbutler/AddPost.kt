@@ -83,6 +83,34 @@ class AddPost : Fragment() {
         val etAddTitle: EditText = view.findViewById(R.id.etAddTitle)
         val etAddContent: EditText = view.findViewById(R.id.etAddContent)
         val tvPostAddAct: TextView = view.findViewById(R.id.postAddAct)
+        val tvPostUpdateAct: TextView =view.findViewById(R.id.postUpdateAct)
+
+        val postIdx = arguments?.getString("postIdx")
+        val postImg = arguments?.getString("postImg")
+        val postTitle = arguments?.getString("postTitle")
+        val postContent = arguments?.getString("postContent")
+
+        Log.d("postIdx", postIdx+ postImg + postTitle + postContent)
+
+        if(postIdx == null) {
+            tvPostAddAct.visibility = View.VISIBLE
+            tvPostUpdateAct.visibility = View.GONE
+        }else {
+            tvPostAddAct.visibility = View.GONE
+            tvPostUpdateAct.visibility = View.VISIBLE
+
+            Log.d("postImg", postImg.toString())
+
+            if(postImg.toString() != "null") {
+                val byteString = Base64.decode(postImg, Base64.DEFAULT)
+                val byteArray = BitmapFactory.decodeByteArray(byteString, 0, byteString.size)
+                Log.d("byteString", byteString.toString())
+                Log.d("byteArray", byteArray.toString())
+                ivAddImg.setImageBitmap(byteArray)
+            }
+            etAddTitle.setText(postTitle)
+            etAddContent.setText(postContent)
+        }
 
         ivAddImg.setOnClickListener {
             showBottomSheetDialog()
@@ -101,6 +129,7 @@ class AddPost : Fragment() {
 
                 if (imageUri != null) {
                     // 이미지의 비트맵을 가져와서 바이트 배열로 변환
+                    Log.d("imageUri", imageUri.toString())
                     val inputStream = mContext.contentResolver.openInputStream(imageUri!!)
                     val bitmap = BitmapFactory.decodeStream(inputStream)
                     val imageByteArray = getByteArrayFromBitmap(bitmap)
@@ -130,6 +159,51 @@ class AddPost : Fragment() {
                     }
                 }
                 queue.add(request)
+            }
+        }
+
+        tvPostUpdateAct.setOnClickListener {
+            if (etAddTitle.text.toString() == "") {
+                Toast.makeText(context, "제목을 작성해주세요 !", Toast.LENGTH_SHORT).show()
+            } else if (etAddContent.text.toString() == "") {
+                Toast.makeText(context, "본문을 작성해주세요 !", Toast.LENGTH_SHORT).show()
+            } else {
+                val inputTitle = etAddTitle.text.toString()
+                val inputContent = etAddContent.text.toString()
+                val encodedImageString: String
+                val post: PostVO
+
+//                if (imageUri != null) {
+//                    // 이미지의 비트맵을 가져와서 바이트 배열로 변환
+//                    val inputStream = mContext.contentResolver.openInputStream(imageUri!!)
+//                    val bitmap = BitmapFactory.decodeStream(inputStream)
+//                    val imageByteArray = getByteArrayFromBitmap(bitmap)
+//                    encodedImageString = Base64.encodeToString(imageByteArray, Base64.DEFAULT)
+//                    post = PostVO(null, memId, encodedImageString, inputContent, null, inputTitle, null)
+//                } else {
+//                    post = PostVO(null, memId, null, inputContent, null, inputTitle, null)
+//                }
+//
+//                val request = object : StringRequest(
+//                    Request.Method.POST,
+//                    "http://192.168.219.60:8089/plantbutler/post/add",
+//                    { response ->
+//                        Log.d("addResponse", response.toString())
+//                        val fragment = Fragment1()
+//                        (context as MainActivity).replaceFragment(fragment)
+//                    },
+//                    { error ->
+//                        Log.d("error", error.toString())
+//                    }
+//                ) {
+//                    override fun getParams(): MutableMap<String, String> {
+//                        val params: MutableMap<String, String> = HashMap<String, String>()
+//
+//                        params.put("addPost", Gson().toJson(post))
+//                        return params
+//                    }
+//                }
+//                queue.add(request)
             }
         }
         return view

@@ -106,7 +106,7 @@ class LoginActivity : AppCompatActivity() {
                 "http://192.168.219.60:8089/plantbutler/login",
                 {response->
                     Log.d("response",response.toString())
-                    val intent = Intent(this,MainActivity::class.java)
+
 
                     if(response.toString()!=""){
 
@@ -123,12 +123,14 @@ class LoginActivity : AppCompatActivity() {
                         editor.apply()
 
                         Toast.makeText(applicationContext,"${member.nick}님 반갑습니다!",Toast.LENGTH_SHORT).show()
-
+                        val intent = Intent(this,MainActivity::class.java)
                         startActivity(intent)
                         finish()
 
                     }else{
                         Toast.makeText(applicationContext,"아이디나 비밀번호를 확인해주세요",Toast.LENGTH_SHORT).show()
+                        val intent = Intent(this,LoginActivity::class.java)
+                        startActivity(intent)
                     }
                     finishAffinity()
 

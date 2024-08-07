@@ -64,31 +64,32 @@ class PostDetail : Fragment() {
         val ivDetailPostImg: ImageView = view.findViewById(R.id.ivDetailPostImg)
         val ivDetailImg: ImageView = view.findViewById(R.id.ivDetailImg)
         val tvDetailDel: TextView = view.findViewById(R.id.tvDetailDel)
+        val tvDetailUpdate: TextView = view.findViewById(R.id.tvDetailUpdate)
         val etInputComment: EditText = view.findViewById(R.id.etInputComment)
 
         val btnCommentAct: Button = view.findViewById(R.id.btnCommentAct)
 
         tvDetailTile.setText(arguments?.getString("title"))
-        tvDetailViews.setText("조회수 "+arguments?.getString("views")+"회")
+        tvDetailViews.setText("조회수 " + arguments?.getString("views") + "회")
         tvDetailNick.setText(arguments?.getString("nick"))
         tvDetailDate.setText(arguments?.getString("date"))
         tvDetailContent.setText(arguments?.getString("content"))
 
         arguments?.getString("memImg")?.let { Log.d("memImg", it) }
 
-        if(arguments?.getString("postImg") != null) {
+        if (arguments?.getString("postImg") != null) {
             val byteString = Base64.decode(arguments?.getString("postImg"), Base64.DEFAULT)
             val byteArray = BitmapFactory.decodeByteArray(byteString, 0, byteString.size)
             ivDetailPostImg.setImageBitmap(byteArray)
-        }else {
+        } else {
             ivDetailPostImg.visibility = View.GONE
         }
 
-        if(arguments?.getString("memImg") != null) {
+        if (arguments?.getString("memImg") != null) {
             val byteString = Base64.decode(arguments?.getString("memImg"), Base64.DEFAULT)
             val byteArray = BitmapFactory.decodeByteArray(byteString, 0, byteString.size)
             ivDetailImg.setImageBitmap(byteArray)
-        }else {
+        } else {
             ivDetailImg.setVisibility(View.GONE)
         }
 
@@ -116,11 +117,13 @@ class PostDetail : Fragment() {
             }
         })
 
-        // 게시글 삭제 보이기 / 안 보이기
+        // 게시글 삭제 및 수정 보이기 / 안 보이기
         if (memId == arguments?.getString("id")) {
             tvDetailDel.visibility = View.VISIBLE
-        }else {
+            tvDetailUpdate.visibility = View.VISIBLE
+        } else {
             tvDetailDel.visibility = View.GONE
+            tvDetailUpdate.visibility = View.GONE
         }
 
         // 게시글 삭제
@@ -129,16 +132,28 @@ class PostDetail : Fragment() {
             val request = StringRequest(
                 Request.Method.GET,
                 "http://192.168.219.60:8089/plantbutler/post/delete/$idx",
-                {response ->
+                { response ->
                     Log.d("postDelete", response.toString())
                     val fragment = Fragment1()
                     (context as MainActivity).replaceFragment(fragment)
                 },
-                {error ->
+                { error ->
                     Log.d("error", error.toString())
                 }
             )
             queue.add(request)
+        }
+
+        // 게시글 수정
+        tvDetailUpdate.setOnClickListener {
+            val fragment = AddPost()
+            val args = Bundle()
+            args.putString("postIdx", idx)
+            args.putString("postImg", arguments?.getString("postImg"))
+            args.putString("postTitle", arguments?.getString("title"))
+            args.putString("postContent", arguments?.getString("content"))
+            fragment.arguments = args
+            (context as MainActivity).replaceFragment(fragment)
         }
 
         // 댓글 등록
@@ -146,20 +161,20 @@ class PostDetail : Fragment() {
             val content = etInputComment.text.toString()
             val comment = CommentVO(null, idx, memId, content)
 
-            val request = object: StringRequest(
+            val request = object : StringRequest(
                 Request.Method.POST,
                 "http://192.168.219.60:8089/plantbutler/comment/add",
-                {response ->
+                { response ->
                     Log.d("commentAdd", response.toString())
                     refreshCommentList(memId, rvCommentList, idx)
                     etInputComment.setText("") // 댓글 입력창 초기화
                 },
-                {error ->
+                { error ->
                     Log.d("error", error.toString())
                 }
-            ){
+            ) {
                 override fun getParams(): MutableMap<String, String> {
-                    val params:MutableMap<String, String> = HashMap<String, String>()
+                    val params: MutableMap<String, String> = HashMap<String, String>()
 
                     params.put("addComment", Gson().toJson(comment))
                     return params
