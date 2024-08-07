@@ -84,11 +84,12 @@ class LoginActivity : AppCompatActivity() {
                         val editor = sharedPreferences.edit()
                         // id,nick,img
                         editor.putString("memId", member.id)
+                        editor.putString("memPw",member.pw)
                         editor.putString("memNick", member.nick)
                         editor.putString("memImg",member.img)
                         editor.apply()
 
-                        Toast.makeText(applicationContext,"${member.nick}님 환영!",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(applicationContext,"${member.nick}님 반갑습니다!",Toast.LENGTH_SHORT).show()
 
                         startActivity(intent)
                         finish()

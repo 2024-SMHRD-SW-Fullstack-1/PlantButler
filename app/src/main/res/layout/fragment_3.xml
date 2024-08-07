@@ -52,7 +52,7 @@
                     app:layout_constraintGuide_percent="0.15" />
 
                 <ImageView
-                    android:id="@+id/imageView6"
+                    android:id="@+id/ivProfileImg"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:src="@drawable/profile"

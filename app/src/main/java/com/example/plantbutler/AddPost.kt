@@ -71,10 +71,13 @@ class AddPost : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_add_post, container, false)
 
         queue = Volley.newRequestQueue(mContext)
+    
+        // 로그인된 아이디 값 가져오기
+        val sharedPreferences = activity?.getSharedPreferences("member", Context.MODE_PRIVATE)
+        val memId = sharedPreferences?.getString("memId", "default_value").toString()
 
         ivAddImg= view.findViewById(R.id.ivAddImg)
         val etAddTitle: EditText = view.findViewById(R.id.etAddTitle)
@@ -86,46 +89,49 @@ class AddPost : Fragment() {
         }
 
         tvPostAddAct.setOnClickListener {
-            val id = "hj"
-            val inputTitle = etAddTitle.text.toString()
-            val inputContent = etAddContent.text.toString()
-            val encodedImageString: String
-            val post: PostVO
+            if (etAddTitle.text.toString() == "") {
+                Toast.makeText(context, "제목을 작성해주세요 !", Toast.LENGTH_SHORT).show()
+            } else if (etAddContent.text.toString() == "") {
+                Toast.makeText(context, "본문을 작성해주세요 !", Toast.LENGTH_SHORT).show()
+            } else {
+                val inputTitle = etAddTitle.text.toString()
+                val inputContent = etAddContent.text.toString()
+                val encodedImageString: String
+                val post: PostVO
 
-            if (imageUri != null) {
-                // 이미지의 비트맵을 가져와서 바이트 배열로 변환
-                val inputStream = mContext.contentResolver.openInputStream(imageUri!!)
-                val bitmap = BitmapFactory.decodeStream(inputStream)
-                val imageByteArray = getByteArrayFromBitmap(bitmap)
-                encodedImageString = Base64.encodeToString(imageByteArray, Base64.DEFAULT)
-                post = PostVO(null, id, encodedImageString, inputContent, null, inputTitle, null)
-            }else {
-                post = PostVO(null, id, null, inputContent, null, inputTitle, null)
-            }
-
-            val request = object: StringRequest(
-                Request.Method.POST,
-                "http://192.168.219.60:8089/plantbutler/post/add",
-                {response ->
-                    Log.d("addResponse", response.toString())
-                    val fragment = Fragment1()
-                    (context as MainActivity).replaceFragment(fragment)
-                },
-                {error ->
-                    Log.d("error", error.toString())
+                if (imageUri != null) {
+                    // 이미지의 비트맵을 가져와서 바이트 배열로 변환
+                    val inputStream = mContext.contentResolver.openInputStream(imageUri!!)
+                    val bitmap = BitmapFactory.decodeStream(inputStream)
+                    val imageByteArray = getByteArrayFromBitmap(bitmap)
+                    encodedImageString = Base64.encodeToString(imageByteArray, Base64.DEFAULT)
+                    post = PostVO(null, memId, encodedImageString, inputContent, null, inputTitle, null)
+                } else {
+                    post = PostVO(null, memId, null, inputContent, null, inputTitle, null)
                 }
-            ){
-                override fun getParams(): MutableMap<String, String> {
-                    val params:MutableMap<String, String> = HashMap<String, String>()
 
-                    params.put("addPost", Gson().toJson(post))
-                    return params
+                val request = object : StringRequest(
+                    Request.Method.POST,
+                    "http://192.168.219.60:8089/plantbutler/post/add",
+                    { response ->
+                        Log.d("addResponse", response.toString())
+                        val fragment = Fragment1()
+                        (context as MainActivity).replaceFragment(fragment)
+                    },
+                    { error ->
+                        Log.d("error", error.toString())
+                    }
+                ) {
+                    override fun getParams(): MutableMap<String, String> {
+                        val params: MutableMap<String, String> = HashMap<String, String>()
+
+                        params.put("addPost", Gson().toJson(post))
+                        return params
+                    }
                 }
+                queue.add(request)
             }
-
-            queue.add(request)
         }
-
         return view
     }
 

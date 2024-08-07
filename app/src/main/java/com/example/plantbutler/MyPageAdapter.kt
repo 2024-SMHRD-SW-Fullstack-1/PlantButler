@@ -32,9 +32,18 @@ class MyPageAdapter(val context: Context, var postList: ArrayList<PostVO>)
     }
 
     override fun onBindViewHolder(holder: MyPageAdapter.ViewHolder, position: Int) {
-        val byteString = Base64.decode(postList.get(position).img, Base64.DEFAULT)
-        val byteArray = BitmapFactory.decodeByteArray(byteString, 0, byteString.size)
-        holder.ivMyRecord.setImageBitmap(byteArray)
+        if(postList.get(position).img != null.toString()){
+            val byteString = Base64.decode(postList.get(position).img, Base64.DEFAULT)
+            val byteArray = BitmapFactory.decodeByteArray(byteString, 0, byteString.size)
+            holder.ivMyRecord.setImageBitmap(byteArray)
+
+        }else{
+            holder.ivMyRecord.setImageResource(R.drawable.leaf)
+        }
+        // 아이템 뷰 클릭 시 해당 게시물로 이동
+        holder.itemView.setOnClickListener{
+
+        }
 
 
     }

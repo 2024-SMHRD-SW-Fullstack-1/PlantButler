@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingBottom="8dp">
 
     <ImageView
         android:id="@+id/ivCommentImg"
@@ -37,19 +38,8 @@
         android:id="@+id/tvCommentDel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="6dp"
-        android:text="삭제"
-        android:textColor="#787878"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/tvCommentEdit"
-        app:layout_constraintStart_toEndOf="@+id/tvCommentEdit" />
-
-    <TextView
-        android:id="@+id/tvCommentEdit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="수정"
+        android:text="삭제"
         android:textColor="#787878"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/tvCommentNick"

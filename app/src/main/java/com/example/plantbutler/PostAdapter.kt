@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Base64
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,14 +14,21 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.green
 import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.Request
+import com.android.volley.RequestQueue
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
+import org.json.JSONArray
 import org.w3c.dom.Text
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 
-class PostAdapter(var context: Context, var postList: ArrayList<PostVO>)
+class PostAdapter(var context: Context, var postList: ArrayList<PostVOWithMemImg>)
     : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
+
+    lateinit var queue: RequestQueue
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         var tvPostTitle: TextView
@@ -51,53 +59,68 @@ class PostAdapter(var context: Context, var postList: ArrayList<PostVO>)
         return postList.size
     }
 
-    override fun onBindViewHolder(holder: PostAdapter.ViewHolder, position: Int) {
-        holder.tvPostTitle.setText(postList.get(position).title)
-        holder.tvPostText.setText(postList.get(position).content)
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        queue = Volley.newRequestQueue(context)
 
-        if(postList.get(position).img != null) {
-            val byteString = Base64.decode(postList.get(position).img, Base64.DEFAULT)
+        val post = postList[position]
+        holder.tvPostTitle.text = post.title
+        holder.tvPostText.text = post.content
+
+        if (post.img != null) {
+            val byteString = Base64.decode(post.img, Base64.DEFAULT)
             val byteArray = BitmapFactory.decodeByteArray(byteString, 0, byteString.size)
             holder.ivPostImg.setImageBitmap(byteArray)
-        }else {
-            holder.ivPostImg.setVisibility(View.GONE)
+        } else {
+            holder.ivPostImg.visibility = View.GONE
         }
 
-        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
-        val outputFormat = SimpleDateFormat("yyyy-MM-dd")
-
-        val date = inputFormat.parse(postList.get(position).date) ?: Date()
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val date = inputFormat.parse(post.date) ?: Date()
         val formatDate = outputFormat.format(date)
 
-        holder.tvPostDate.setText(formatDate)
-        holder.tvPostNick.setText(postList.get(position).id)
+        holder.tvPostDate.text = formatDate
+        holder.tvPostNick.text = post.id
 
-        holder.clPost.setOnClickListener{
+        holder.clPost.setOnClickListener {
             val fragment = PostDetail()
             val args = Bundle()
-            postList.get(position).idx?.let { idx -> args.putInt("idx", idx) }
-            args.putString("title", postList.get(position).title)
-            postList.get(position).views?.let { views -> args.putInt("views", views) }
-            args.putString("id", postList.get(position).id)
-            args.putString("img", postList.get(position).img)
+            var views = post.views
 
-            // 날짜 변환
-            val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-            inputFormat.timeZone = TimeZone.getTimeZone("UTC") // 입력 시간대 설정
+            args.putString("idx", post.idx.toString())
+            args.putString("title", post.title)
+            args.putString("id", post.id)
+            args.putString("postImg", post.img)
+            args.putString("memImg", post.memImg)
+            args.putString("nick", post.nick)
 
-            val outputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
-            outputFormat.timeZone = TimeZone.getDefault() // 출력 시간대 설정 (기본 시간대)
+            val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+            val outputDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+            val parsedDate = inputDateFormat.parse(post.date) ?: Date()
+            val formattedDate = outputDateFormat.format(parsedDate)
 
-            val date = inputFormat.parse(postList[position].date) ?: Date()
-            val formatDate = outputFormat.format(date)
+            args.putString("date", formattedDate)
+            args.putString("content", post.content)
 
-            args.putString("date", formatDate)
-            args.putString("content", postList.get(position).content)
+            val request = StringRequest(
+                Request.Method.GET,
+                "http://192.168.219.60:8089/plantbutler/increViews/${post.idx}",
+                { response ->
+                    Log.d("increViews", response.toString())
+                    views = views?.plus(1)
+                    args.putString("views", views.toString())
 
-            fragment.arguments = args
+                    fragment.arguments = args
 
-            (context as MainActivity).replaceFragment(fragment)
+                    (context as MainActivity).replaceFragment(fragment)
+                },
+                { error ->
+                    Log.d("error", error.toString())
+                }
+            )
+            queue.add(request)
         }
+
     }
 
 }
