@@ -42,7 +42,7 @@ class JoinActivity : AppCompatActivity() {
                 {response->
                     Log.d("response",response.toString())
                     // 회원가입 후 메인화면
-                    val intent = Intent(this,MainActivity::class.java)
+                    val intent = Intent(this,LoginActivity::class.java)
                     startActivity(intent)
                 },
                 {error->

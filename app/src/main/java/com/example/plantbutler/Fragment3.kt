@@ -2,10 +2,13 @@ package com.example.plantbutler
 
 import android.app.Activity
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.Intent.getIntent
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +26,8 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
 import org.json.JSONArray
+import org.json.JSONObject
+import org.w3c.dom.Text
 
 
 class Fragment3 : Fragment() {
@@ -31,7 +36,7 @@ class Fragment3 : Fragment() {
     lateinit var queue: RequestQueue
 
     lateinit var rvMypageList:RecyclerView
-    lateinit var postList: ArrayList<PostVO>
+    lateinit var postList: ArrayList<PostVOWithMemImg>
     lateinit var adapter: MyPageAdapter
     lateinit var btnEdit:Button
     lateinit var ivProfileImg:ImageView
@@ -52,20 +57,28 @@ class Fragment3 : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_3, container, false)
         rvMypageList = view.findViewById<RecyclerView>(R.id.rvMypageList)
-        postList = ArrayList<PostVO>()
+        postList = ArrayList<PostVOWithMemImg>()
+        queue = Volley.newRequestQueue(mContext)
+
         ivProfileImg = view.findViewById<ImageView>(R.id.ivProfileImg)
-        //ivProfileImg.setImageResource(R.drawable.profile)
-
-
+        val tvCntPlant: TextView = view.findViewById(R.id.tvCntPlant)
+        val tvCntPost: TextView = view.findViewById(R.id.tvCntPost)
+        val tvCntComment: TextView = view.findViewById(R.id.tvCntComment)
 
         // 로그인 정보 가져오기
         val sharedPreferences = activity?.getSharedPreferences("member", Context.MODE_PRIVATE)
         val memNick = sharedPreferences?.getString("memNick","planty")
         val memId = sharedPreferences?.getString("memId", "id")
+        val memImg = sharedPreferences?.getString("memImg", "img")
+
+        val byteString:ByteArray = Base64.decode(memImg, Base64.DEFAULT)
+        val byteArray = BitmapFactory.decodeByteArray(byteString, 0, byteString.size)
+
+        ivProfileImg.setImageBitmap(byteArray)
 
         // 닉네임
         val tvNick = view.findViewById<TextView>(R.id.tvNick)
-        tvNick.text = memNick+"님"
+        tvNick.text = memNick
 
         // 회원정보 수정
         btnEdit = view.findViewById(R.id.btnEdit)
@@ -76,79 +89,80 @@ class Fragment3 : Fragment() {
         // 로그아웃
         var btnLogout = view.findViewById<Button>(R.id.btnLogout)
         btnLogout.setOnClickListener {
+            val editor = sharedPreferences!!.edit()
+            editor.clear()
+            editor.commit()
             Toast.makeText(mContext, "로그아웃되었습니다", Toast.LENGTH_SHORT).show()
             val intent = Intent(context,LoginActivity::class.java)
             startActivity(intent)
         }
 
-
-        queue = Volley.newRequestQueue(mContext)
-
-        adapter = MyPageAdapter(mContext,postList)
-        rvMypageList.adapter = adapter
-        rvMypageList.layoutManager = GridLayoutManager(mContext,3)
-
         // 내 기록 확인 요청
-        val request =  object: StringRequest(
-            Request.Method.POST,
+        reqMyrecord(memId, tvCntPlant, tvCntPost, tvCntComment)
+
+        return view
+    }
+
+    private fun reqMyrecord(memId: String?, tvCntPlant: TextView, tvCntPost: TextView, tvCntComment: TextView) {
+        adapter = MyPageAdapter(mContext, postList)
+        rvMypageList.adapter = adapter
+        rvMypageList.layoutManager = GridLayoutManager(mContext, 3)
+        val request = object : StringRequest(
+            Method.POST,
             "http://192.168.219.60:8089/plantbutler/mypage",
-            {response->
-                Log.d("mypageResponse",response.toString())
+            { response ->
+                Log.d("mypageResponse", response.toString())
+                val jsonObject = JSONObject(response)
+
+                // 키우는 식물, 작성한 글, 작성한 댓글
+                val cntPlant = jsonObject.getString("cntPlant")
+                val cntPost = jsonObject.getString("cntPost")
+                val cntComment = jsonObject.getString("cntComment")
+
+                tvCntPlant.setText(cntPlant)
+                tvCntPost.setText(cntPost)
+                tvCntComment.setText(cntComment)
+
                 //내 게시물
-                val jsonArray = JSONArray(response)
-                for(i in 0 until jsonArray.length()) {
-                    val result = jsonArray.getJSONObject(i)
+                val myPostList = jsonObject.getJSONArray("postList")
+                for (i in 0 until jsonObject.getJSONArray("postList").length()) {
+                    val result = jsonObject.getJSONArray("postList").getJSONObject(1)
                     val idx = result.getString("idx").toInt()
-                    val nick = result.getJSONObject("member").getString("nick")
+                    val id = result.getJSONObject("member").getString("id")
                     val content = result.getString("content")
                     val views = result.getString("views").toInt()
                     val title = result.getString("title")
                     val date = result.getString("date")
                     val img: String
+                    val nick = result.getJSONObject("member").getString("nick")
+                    val memImg = result.getJSONObject("member").getString("img")
 
-                    if(result.getString("img") != null) {
+
+
+                    if (result.getString("img") != null) {
                         img = result.getString("img")
-                    }else{
+                    } else {
                         img = null.toString()
                     }
+                    Log.d("defaulImg", img.toString())
 
-                    postList.add(PostVO(idx, nick, img, content, views, title, date))
+                    postList.add(PostVOWithMemImg(idx, id, img, content, views, title, date, nick, memImg))
 
                     adapter.notifyDataSetChanged()
                 }
-
-
-
             },
-            {error->
-                Log.d("error",error.toString())
+            { error ->
+                Log.d("error", error.toString())
             }
-        ){
-            override fun getParams():MutableMap<String,String>{
-                val params:MutableMap<String,String> = HashMap<String,String>()
+        ) {
+            override fun getParams(): MutableMap<String, String> {
+                val params: MutableMap<String, String> = HashMap<String, String>()
                 params.put("Member", Gson().toJson(memId))
 
                 return params
             }
         }
         queue.add(request)
-
-
-        return view
     }
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(view, savedInstanceState)
-//
-//        // SharedPreferences로부터 이미지 URI 불러오기
-//        val sharedPreferences = activity?.getSharedPreferences("profileImg", Context.MODE_PRIVATE)
-//        val imageUri = sharedPreferences?.getString("imageUri", null)
-//        if (imageUri != null) {
-//            val uri = Uri.parse(imageUri)
-//            ivProfileImg.setImageURI(uri)
-//        } else {
-//            // 기본 이미지 설정
-//            ivProfileImg.setImageResource(R.drawable.profile)
-//        }
-//    }
 
 }

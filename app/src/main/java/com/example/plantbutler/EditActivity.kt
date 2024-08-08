@@ -6,11 +6,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Base64
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
@@ -53,23 +55,55 @@ class EditActivity : AppCompatActivity() {
 
         // 로그인된 정보 가져오기
         val sharedPreferences = getSharedPreferences("member", Context.MODE_PRIVATE)
-        val memNick = sharedPreferences?.getString("memNick","planty")
+        val memNick = sharedPreferences?.getString("memNick", "planty")
         val memId = sharedPreferences?.getString("memId", "id")
         val memPw = sharedPreferences?.getString("memPw", "pw")
-        val memImg = sharedPreferences?.getString("memImg", "Img")
+        val memImg = sharedPreferences?.getString("memImg", "img")
 
-        //val ivEdit = findViewById<ImageView>(R.id.)
-        //val btnCam
-        //val etEditNick
-        //val btnEditNick
-        //val etEditPw
-        //val etEditPw2
-        //val btnEditPw
-        //valDeleteAct
+        val byteString:ByteArray = Base64.decode(memImg, Base64.DEFAULT)
+        val byteArray = BitmapFactory.decodeByteArray(byteString, 0, byteString.size)
+
+        binding.ivEdit.setImageBitmap(byteArray)
 
         // 프로필 사진 변경
         binding.ivEdit.setOnClickListener {
             showBottomSheetDialog()
+            val pm:Member
+            if(imageUri != null){
+                val inputStream = contentResolver.openInputStream(imageUri!!)
+                val bitmap = BitmapFactory.decodeStream(inputStream)
+                val imageByteArray = getByteArrayFromBitmap(bitmap)
+                encodedImageString = Base64.encodeToString(imageByteArray, Base64.DEFAULT)
+                pm = Member(memId.toString(),memPw.toString(),null,encodedImageString)
+
+                val request = object :StringRequest(
+                    Request.Method.POST,
+                    "http://192.168.219.60:8089/plantbutler/mypage/profilechange",
+                    {response->
+                        Log.d("profileImgChange",response.toString())
+                        if(imageUri != null){
+                            Toast.makeText(this, "사진이 변경되었습니다", Toast.LENGTH_SHORT).show()
+                        }
+
+
+                    },
+                    {error->
+                        Log.d("profileImgError",error.toString())
+                    }
+                ){
+                    override fun getParams():MutableMap<String,String>{
+                        val params:MutableMap<String,String> = HashMap<String,String>()
+                        params.put("Member", Gson().toJson(pm))
+
+                        return params
+                    }
+                }
+                queue.add(request)
+            }else {
+                Toast.makeText(this, "사진이 변경이 취소되었습니다", Toast.LENGTH_SHORT).show()
+            }
+
+
         }
         // 닉네임 변경
         binding.etEditNick.hint = memNick
@@ -83,6 +117,7 @@ class EditActivity : AppCompatActivity() {
                 {response->
                     Log.d("nickChange",response.toString())
                     Toast.makeText(this, "닉네임이 변경되었습니다", Toast.LENGTH_SHORT).show()
+
                 },
                 {error->
                     Log.d("nickError",error.toString())
@@ -136,7 +171,7 @@ class EditActivity : AppCompatActivity() {
                 Toast.makeText(this, "비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show()
             }else if (inputPw != inputPw2){
                 Toast.makeText(this, "입력한 비밀번호가 일치하지 않습니다", Toast.LENGTH_SHORT).show()
-            }else{
+            }else if(inputPw == inputPw2 && inputPw == memPw){
                 val request = object :StringRequest(
                     Request.Method.POST,
                     "http://192.168.219.61:8089/plantbutler/mypage/delete",
@@ -157,6 +192,8 @@ class EditActivity : AppCompatActivity() {
                     }
                 }
                 queue.add(request)
+            }else{
+                Toast.makeText(this, "입력한 비밀번호가 일치하지 않습니다", Toast.LENGTH_SHORT).show()
             }
         }
 
