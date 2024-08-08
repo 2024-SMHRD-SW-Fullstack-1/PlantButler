@@ -135,6 +135,8 @@ class PlantAddActivity : AppCompatActivity() {
         val queue = Volley.newRequestQueue(this)
         val url = "http://192.168.219.41:8089/plantbutler/api/plants"
 
+        val selectedPlant = plantList.find { it.id == plantIdx }
+
         val myPlant = MyPlant(
             myplantIdx = -1,
             memberId = memberId,
@@ -142,7 +144,7 @@ class PlantAddActivity : AppCompatActivity() {
             nickname = nickname,
             goal = goal,
             startDate = startDate,
-            imageUrl = null // This can be updated based on your needs
+            imageUrl = selectedPlant?.imageUrl // 선택한 식물의 이미지 URL을 설정
         )
         val gson = Gson()
         val requestBody = gson.toJson(myPlant)

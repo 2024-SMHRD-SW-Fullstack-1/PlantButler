@@ -26,10 +26,10 @@ class MyPlantAdapter(
         val myPlant = myPlantList[position]
         holder.plantName.text = myPlant.nickname
 
-        if (myPlant.imageUrl != null && myPlant.imageUrl.isNotEmpty()) {
+        if (!myPlant.imageUrl.isNullOrEmpty()) {
             Picasso.get().load(myPlant.imageUrl).into(holder.plantImage)
         } else {
-            holder.plantImage.setImageResource(R.drawable.default_image)
+            holder.plantImage.setImageResource(R.drawable.basic) // 기본 이미지 설정
         }
 
         holder.itemView.setOnClickListener {

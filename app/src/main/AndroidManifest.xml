@@ -60,6 +60,12 @@
         <activity
             android:name=".TimelineActivity"
             android:exported="false" />
+        <!-- 새로 추가된 액티비티들 -->
+        <activity
+            android:name=".SunDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SunMainActivity"
+            android:exported="false" />
     </application>
-
 </manifest>

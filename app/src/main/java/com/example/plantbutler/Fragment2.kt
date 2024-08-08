@@ -50,6 +50,12 @@ class Fragment2 : Fragment(), MyPlantAdapter.OnItemClickListener {
             startActivityForResult(intent, 1)
         }
 
+        val btnDiction: Button = view.findViewById(R.id.btnDiction)
+        btnDiction.setOnClickListener {
+            val intent = Intent(activity, SunMainActivity::class.java).apply{}
+            startActivityForResult(intent, 1)
+        }
+
         // 서버에서 식물 목록을 로드
         loadPlantsFromServer()
 
