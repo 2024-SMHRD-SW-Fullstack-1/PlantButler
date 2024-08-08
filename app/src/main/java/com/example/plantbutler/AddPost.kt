@@ -34,10 +34,13 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.json.JSONArray
+import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.FileOutputStream
 import java.lang.reflect.Type
 import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class AddPost : Fragment() {
 
@@ -85,12 +88,12 @@ class AddPost : Fragment() {
         val tvPostAddAct: TextView = view.findViewById(R.id.postAddAct)
         val tvPostUpdateAct: TextView =view.findViewById(R.id.postUpdateAct)
 
-        val postIdx = arguments?.getString("postIdx")
+        val postIdx = arguments?.getString("postIdx")?.toInt()
         val postImg = arguments?.getString("postImg")
         val postTitle = arguments?.getString("postTitle")
         val postContent = arguments?.getString("postContent")
 
-        Log.d("postIdx", postIdx+ postImg + postTitle + postContent)
+        Log.d("postIdx", postIdx.toString()+ postImg + postTitle + postContent)
 
         if(postIdx == null) {
             tvPostAddAct.visibility = View.VISIBLE
@@ -134,9 +137,9 @@ class AddPost : Fragment() {
                     val bitmap = BitmapFactory.decodeStream(inputStream)
                     val imageByteArray = getByteArrayFromBitmap(bitmap)
                     encodedImageString = Base64.encodeToString(imageByteArray, Base64.DEFAULT)
-                    post = PostVO(null, memId, encodedImageString, inputContent, null, inputTitle, null)
+                    post = PostVO(postIdx, memId, encodedImageString, inputContent, null, inputTitle, null)
                 } else {
-                    post = PostVO(null, memId, null, inputContent, null, inputTitle, null)
+                    post = PostVO(postIdx, memId, null, inputContent, null, inputTitle, null)
                 }
 
                 val request = object : StringRequest(
@@ -144,7 +147,39 @@ class AddPost : Fragment() {
                     "http://192.168.219.60:8089/plantbutler/post/add",
                     { response ->
                         Log.d("addResponse", response.toString())
-                        val fragment = Fragment1()
+                        Toast.makeText(context,"게시글 등록 완료",Toast.LENGTH_SHORT).show()
+                        val jsonObject = JSONObject(response)
+                        val updateIdx = jsonObject.getString("idx")
+                        val updateTitle = jsonObject.getString("title")
+                        val updateId = jsonObject.getJSONObject("member").getString("id")
+                        val updateImg = jsonObject.getString("img")
+                        val updateMemImg = jsonObject.getJSONObject("member").getString("img")
+                        val updateNick = jsonObject.getJSONObject("member").getString("nick")
+                        val updateDate = jsonObject.getString("date")
+                        val updateContent = jsonObject.getString("content")
+                        val updateViews = 0;
+
+                        Log.d("updateResults", updateIdx+updateTitle+updateId+updateImg+updateMemImg+updateNick)
+
+                        val fragment = PostDetail()
+                        val args = Bundle()
+                        args.putString("idx", updateIdx)
+                        args.putString("title", updateTitle)
+                        args.putString("id", updateId)
+                        args.putString("postImg", updateImg)
+                        args.putString("memImg", updateMemImg)
+                        args.putString("nick", updateNick)
+                        args.putString("views", updateViews.toString())
+
+                        val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+                        val outputDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+                        val parsedDate = inputDateFormat.parse(updateDate) ?: Date()
+                        val formattedDate = outputDateFormat.format(parsedDate)
+
+                        args.putString("date", formattedDate)
+                        args.putString("content", updateContent)
+
+                        fragment.arguments = args
                         (context as MainActivity).replaceFragment(fragment)
                     },
                     { error ->
@@ -173,37 +208,71 @@ class AddPost : Fragment() {
                 val encodedImageString: String
                 val post: PostVO
 
-//                if (imageUri != null) {
-//                    // 이미지의 비트맵을 가져와서 바이트 배열로 변환
-//                    val inputStream = mContext.contentResolver.openInputStream(imageUri!!)
-//                    val bitmap = BitmapFactory.decodeStream(inputStream)
-//                    val imageByteArray = getByteArrayFromBitmap(bitmap)
-//                    encodedImageString = Base64.encodeToString(imageByteArray, Base64.DEFAULT)
-//                    post = PostVO(null, memId, encodedImageString, inputContent, null, inputTitle, null)
-//                } else {
-//                    post = PostVO(null, memId, null, inputContent, null, inputTitle, null)
-//                }
-//
-//                val request = object : StringRequest(
-//                    Request.Method.POST,
-//                    "http://192.168.219.60:8089/plantbutler/post/add",
-//                    { response ->
-//                        Log.d("addResponse", response.toString())
-//                        val fragment = Fragment1()
-//                        (context as MainActivity).replaceFragment(fragment)
-//                    },
-//                    { error ->
-//                        Log.d("error", error.toString())
-//                    }
-//                ) {
-//                    override fun getParams(): MutableMap<String, String> {
-//                        val params: MutableMap<String, String> = HashMap<String, String>()
-//
-//                        params.put("addPost", Gson().toJson(post))
-//                        return params
-//                    }
-//                }
-//                queue.add(request)
+                if (imageUri != null) {
+                    // 이미지의 비트맵을 가져와서 바이트 배열로 변환
+                    val inputStream = mContext.contentResolver.openInputStream(imageUri!!)
+                    val bitmap = BitmapFactory.decodeStream(inputStream)
+                    val imageByteArray = getByteArrayFromBitmap(bitmap)
+                    encodedImageString = Base64.encodeToString(imageByteArray, Base64.DEFAULT)
+                    post = PostVO(postIdx, memId, encodedImageString, inputContent, null, inputTitle, null)
+                } else {
+                    post = PostVO(postIdx, memId, null, inputContent, null, inputTitle, null)
+                }
+
+                Log.d("update__post", post.toString())
+
+                val request = object : StringRequest(
+                    Request.Method.POST,
+                    "http://192.168.219.60:8089/plantbutler/post/update",
+                    { response ->
+                        Log.d("updateResponse", response.toString())
+                        Toast.makeText(context,"게시글 수정 완료",Toast.LENGTH_SHORT).show()
+                        val jsonObject = JSONObject(response)
+                        val updateIdx = jsonObject.getString("idx")
+                        val updateTitle = jsonObject.getString("title")
+                        val updateId = jsonObject.getJSONObject("member").getString("id")
+                        val updateImg = jsonObject.getString("img")
+                        val updateMemImg = jsonObject.getJSONObject("member").getString("img")
+                        val updateNick = jsonObject.getJSONObject("member").getString("nick")
+                        val updateDate = jsonObject.getString("date")
+                        val updateContent = jsonObject.getString("content")
+                        val updateViews = jsonObject.getString("views");
+
+                        Log.d("updateResults", updateIdx+updateTitle+updateId+updateImg+updateMemImg+updateNick)
+
+                        val fragment = PostDetail()
+                        val args = Bundle()
+                        args.putString("idx", updateIdx)
+                        args.putString("title", updateTitle)
+                        args.putString("id", updateId)
+                        args.putString("postImg", updateImg)
+                        args.putString("memImg", updateMemImg)
+                        args.putString("nick", updateNick)
+                        args.putString("views", updateViews.toString())
+
+                        val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+                        val outputDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+                        val parsedDate = inputDateFormat.parse(updateDate) ?: Date()
+                        val formattedDate = outputDateFormat.format(parsedDate)
+
+                        args.putString("date", formattedDate)
+                        args.putString("content", updateContent)
+
+                        fragment.arguments = args
+                        (context as MainActivity).replaceFragment(fragment)
+                    },
+                    { error ->
+                        Log.d("error", error.toString())
+                    }
+                ) {
+                    override fun getParams(): MutableMap<String, String> {
+                        val params: MutableMap<String, String> = HashMap<String, String>()
+
+                        params.put("updatePost", Gson().toJson(post))
+                        return params
+                    }
+                }
+                queue.add(request)
             }
         }
         return view

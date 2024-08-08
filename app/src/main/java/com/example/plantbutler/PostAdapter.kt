@@ -80,7 +80,7 @@ class PostAdapter(var context: Context, var postList: ArrayList<PostVOWithMemImg
         val formatDate = outputFormat.format(date)
 
         holder.tvPostDate.text = formatDate
-        holder.tvPostNick.text = post.id
+        holder.tvPostNick.text = post.nick
 
         holder.clPost.setOnClickListener {
             val fragment = PostDetail()

@@ -129,10 +129,10 @@ class LoginActivity : AppCompatActivity() {
 
                     }else{
                         Toast.makeText(applicationContext,"아이디나 비밀번호를 확인해주세요",Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this,LoginActivity::class.java)
-                        startActivity(intent)
+                        //val intent = Intent(this,LoginActivity::class.java)
+                        //startActivity(intent)
                     }
-                    finishAffinity()
+                    //finishAffinity()
 
                 },
                 {error->

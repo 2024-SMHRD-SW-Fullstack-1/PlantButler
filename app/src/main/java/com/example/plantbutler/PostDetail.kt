@@ -15,6 +15,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.SearchView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
@@ -51,6 +52,8 @@ class PostDetail : Fragment() {
         val idx = arguments?.getString("idx")
         queue = Volley.newRequestQueue(mContext)
 
+        Log.d("postDetailIdx", idx.toString())
+
         // 로그인한 회원 id
         val sharedPreferences = activity?.getSharedPreferences("member", Context.MODE_PRIVATE)
         val memId = sharedPreferences?.getString("memId", "default_value")
@@ -74,8 +77,6 @@ class PostDetail : Fragment() {
         tvDetailNick.setText(arguments?.getString("nick"))
         tvDetailDate.setText(arguments?.getString("date"))
         tvDetailContent.setText(arguments?.getString("content"))
-
-        arguments?.getString("memImg")?.let { Log.d("memImg", it) }
 
         if (arguments?.getString("postImg") != null) {
             val byteString = Base64.decode(arguments?.getString("postImg"), Base64.DEFAULT)
@@ -166,6 +167,7 @@ class PostDetail : Fragment() {
                 "http://192.168.219.60:8089/plantbutler/comment/add",
                 { response ->
                     Log.d("commentAdd", response.toString())
+                    Toast.makeText(context,"댓글 등록 완료",Toast.LENGTH_SHORT).show()
                     refreshCommentList(memId, rvCommentList, idx)
                     etInputComment.setText("") // 댓글 입력창 초기화
                 },
