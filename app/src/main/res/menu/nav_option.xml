@@ -3,13 +3,11 @@
 
     <item
         android:id="@+id/m1"
-        android:icon="@drawable/home"
         android:title="메인페이지" />
     <item
         android:id="@+id/m2"
         android:title="식물관리" />
     <item
         android:id="@+id/m3"
-        android:icon="@drawable/user"
         android:title="마이페이지" />
 </menu>

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".PostDetail">
+
+    <!-- Header layout -->
+    <include
+        android:id="@+id/header"
+        layout="@layout/header_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth="0dp" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        tools:layout_editor_absoluteX="16dp">
+
+        <ImageView
+            android:id="@+id/ivDetailImg"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDetailTitle"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/tvDetailNick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:text="식집사"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/ivDetailImg"
+            app:layout_constraintTop_toBottomOf="@+id/tvDetailTitle" />
+
+        <TextView
+            android:id="@+id/tvDetailDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="2024-08-06 08:00"
+            app:layout_constraintStart_toStartOf="@+id/tvDetailNick"
+            app:layout_constraintTop_toBottomOf="@+id/tvDetailNick" />
+
+        <TextView
+            android:id="@+id/tvDetailTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="제목제목제목제목제목제목"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvDetailContent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="물고기가 뛰어오르는 호수 근처에서, 나무 사이로 부는 바람 소리가 들린다.\n
+        햇살은 부드럽게 내려앉아 모든 것을 금빛으로 물들인다.\n
+        산책하는 사람들이 평화롭게 이야기를 나누며 지나간다.\n
+        새들이 나뭇가지에 앉아 지저귀고, 아이들은 잔디밭에서 뛰놀며 웃음소리를 낸다.\n
+        이곳에서는 시간도 천천히 흐르는 것만 같다.\n
+        모든 것이 자연스럽고 조화롭게 어우러져 한 폭의 그림 같은 풍경을 만들어낸다."
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ivDetailPostImg" />
+
+        <ImageView
+            android:id="@+id/ivDetailPostImg"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ivDetailImg" />
+
+        <TextView
+            android:id="@+id/tvDetailViews"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="조회수 10회"
+            app:layout_constraintBottom_toBottomOf="@+id/tvDetailTitle"
+            app:layout_constraintStart_toEndOf="@+id/tvDetailTitle"
+            app:layout_constraintTop_toTopOf="@+id/tvDetailTitle" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:background="#000000"
+            app:layout_constraintTop_toBottomOf="@+id/tvDetailContent"
+            tools:layout_editor_absoluteX="16dp" />
+
+        <EditText
+            android:id="@+id/etInputComment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="댓글을 입력하세요."
+            android:inputType="text"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toStartOf="@+id/btnCommentAct"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view" />
+
+        <Button
+            android:id="@+id/btnCommentAct"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:text="등록"
+            android:textSize="12sp"
+            app:cornerRadius="10dp"
+            app:layout_constraintBottom_toBottomOf="@+id/etInputComment"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/etInputComment" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvCommentList"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/etInputComment" />
+
+        <TextView
+            android:id="@+id/tvDetailDel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="삭제"
+            android:textColor="#787878"
+            app:layout_constraintBottom_toBottomOf="@+id/tvDetailUpdate"
+            app:layout_constraintStart_toEndOf="@+id/tvDetailUpdate" />
+
+        <TextView
+            android:id="@+id/tvDetailUpdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="수정"
+            app:layout_constraintBottom_toBottomOf="@+id/tvDetailDate"
+            app:layout_constraintStart_toEndOf="@+id/tvDetailDate" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- ScrollView positioned below the header -->
+
+</androidx.constraintlayout.widget.ConstraintLayout>

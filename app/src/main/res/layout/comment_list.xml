@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="8dp">
+
+    <ImageView
+        android:id="@+id/ivCommentImg"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/tvCommentNick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="소소데이"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/ivCommentImg"
+        app:layout_constraintStart_toEndOf="@+id/ivCommentImg" />
+
+    <TextView
+        android:id="@+id/tvCommentContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="댓글 내용 입니다.댓글 내용 입니다.댓글 내용 입니다."
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/ivCommentImg"
+        app:layout_constraintTop_toBottomOf="@+id/ivCommentImg" />
+
+    <TextView
+        android:id="@+id/tvCommentDel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="삭제"
+        android:textColor="#787878"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tvCommentNick"
+        app:layout_constraintStart_toEndOf="@+id/tvCommentNick" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

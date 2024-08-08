@@ -5,7 +5,10 @@
     android:id="@+id/clPost"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp">
+    android:layout_margin="20dp"
+    android:background="@drawable/rounded_background"
+    android:padding="16dp">
+
 
     <TextView
         android:id="@+id/tvPostTitle"
@@ -19,13 +22,15 @@
 
     <TextView
         android:id="@+id/tvPostText"
-        android:layout_width="300dp"
+        android:layout_width="245dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
         android:ellipsize="end"
         android:maxLines="2"
         android:text="바질이 하루 아침에 제 곁을 떠났습니다 ㅠㅠ.\n과습인걸까요.. 요즘 날씨가 더워서일까요 ㅠㅠ\n초보 식집사는 어렵네요..."
         android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@+id/ivPostImg"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvPostTitle" />
 
@@ -36,8 +41,6 @@
         android:background="@drawable/rounded_corners"
         app:layout_constraintBottom_toTopOf="@+id/tvPostDate"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/tvPostText"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/plant1" />
@@ -46,19 +49,20 @@
         android:id="@+id/tvPostDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="2024.08.04"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/ivPostImg"
-        app:layout_constraintStart_toStartOf="@+id/ivPostImg" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/ivPostImg"
+        app:layout_constraintTop_toBottomOf="@+id/ivPostImg" />
 
     <TextView
         android:id="@+id/tvPostNick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="10dp"
         android:text="식집사"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/tvPostDate"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvPostText" />
 

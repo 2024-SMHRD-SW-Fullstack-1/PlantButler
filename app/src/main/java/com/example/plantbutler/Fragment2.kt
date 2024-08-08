@@ -1,6 +1,7 @@
 package com.example.plantbutler
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -29,8 +30,9 @@ class Fragment2 : Fragment(), MyPlantAdapter.OnItemClickListener {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_2, container, false)
 
-        // 인텐트로 전달된 로그인한 사용자의 ID를 가져옴
-        memberId = arguments?.getString("memberId")
+        // SharedPreferences에서 로그인한 사용자의 ID를 가져옴
+        val sharedPreferences = activity?.getSharedPreferences("member", Context.MODE_PRIVATE)
+        memberId = sharedPreferences?.getString("memId", "id")
 
         // RecyclerView와 어댑터 초기화
         recyclerView = view.findViewById(R.id.recyclerView)
