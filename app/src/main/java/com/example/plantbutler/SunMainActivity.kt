@@ -45,6 +45,8 @@ class SunMainActivity : AppCompatActivity() {
         })
     }
 
+
+
     private fun loadPlants(page: Int) {
         val url = "https://trefle.io/api/v1/plants?token=sC_m01lEXMmE0BMjxDRN-nzctY4N3nSnxZSLlvTQP4Y&page=$page"
         val request = StringRequest(
