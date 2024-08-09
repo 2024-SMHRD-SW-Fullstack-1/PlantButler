@@ -29,9 +29,6 @@
             android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".PostDetail"
-            android:exported="false" />
-        <activity
             android:name=".PlantAddActivity"
             android:exported="false" />
         <activity
@@ -45,9 +42,6 @@
             android:exported="false" />
         <activity
             android:name=".EditActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Search"
             android:exported="false" />
         <activity
             android:name=".SplashActivity"

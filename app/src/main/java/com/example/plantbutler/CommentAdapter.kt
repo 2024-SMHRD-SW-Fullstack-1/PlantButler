@@ -51,7 +51,7 @@ class CommentAdapter(var context: Context, var commentList: ArrayList<CommentVOW
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         queue = Volley.newRequestQueue(context)
 
-        holder.tvCommentNick.setText(commentList.get(position).id)
+        holder.tvCommentNick.setText(commentList.get(position).nick)
         holder.tvCommentContent.setText(commentList.get(position).content)
 
         if(commentList.get(position).memImg != null) {

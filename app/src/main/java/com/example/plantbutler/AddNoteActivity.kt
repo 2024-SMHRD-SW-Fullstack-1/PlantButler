@@ -68,7 +68,7 @@ class AddNoteActivity : AppCompatActivity() {
         )
 
         val queue = Volley.newRequestQueue(this)
-        val url = "http://192.168.219.41:8089/plantbutler/api/notes"
+        val url = "http://192.168.219.60:8089/plantbutler/api/notes"
 
         val gson = GsonBuilder().create()
         val requestBody = gson.toJson(note)

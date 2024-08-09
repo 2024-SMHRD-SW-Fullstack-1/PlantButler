@@ -20,6 +20,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -35,6 +36,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.json.JSONArray
 import org.json.JSONObject
+import org.w3c.dom.Text
 import java.io.ByteArrayOutputStream
 import java.io.FileOutputStream
 import java.lang.reflect.Type
@@ -57,6 +59,9 @@ class AddPost : Fragment() {
     lateinit var mActivity: Activity
 
     lateinit var ivAddImg: ImageView
+    lateinit var ivUploadIcon: ImageView
+    lateinit var tvUploadText: TextView
+    lateinit var tvUploadSubText: TextView
 
     lateinit var encodedImageString: String
 
@@ -86,7 +91,11 @@ class AddPost : Fragment() {
         val etAddTitle: EditText = view.findViewById(R.id.etAddTitle)
         val etAddContent: EditText = view.findViewById(R.id.etAddContent)
         val tvPostAddAct: TextView = view.findViewById(R.id.postAddAct)
-        val tvPostUpdateAct: TextView =view.findViewById(R.id.postUpdateAct)
+        val tvPostUpdateAct: TextView = view.findViewById(R.id.postUpdateAct)
+        val llUploadPrompt: LinearLayout = view.findViewById(R.id.llUploadPrompt)
+        ivUploadIcon = view.findViewById(R.id.ivUploadIcon)
+        tvUploadText = view.findViewById(R.id.tvUploadText)
+        tvUploadSubText = view.findViewById(R.id.tvUploadSubText)
 
         val postIdx = arguments?.getString("postIdx")?.toInt()
         val postImg = arguments?.getString("postImg")
@@ -115,7 +124,7 @@ class AddPost : Fragment() {
             etAddContent.setText(postContent)
         }
 
-        ivAddImg.setOnClickListener {
+        llUploadPrompt.setOnClickListener {
             showBottomSheetDialog()
         }
 
@@ -144,11 +153,12 @@ class AddPost : Fragment() {
 
                 val request = object : StringRequest(
                     Request.Method.POST,
-                    "http://192.168.219.41:8089/plantbutler/post/add",
+                    "http://192.168.219.60:8089/plantbutler/post/add",
                     { response ->
                         Log.d("addResponse", response.toString())
                         Toast.makeText(context,"게시글 등록 완료",Toast.LENGTH_SHORT).show()
                         val jsonObject = JSONObject(response)
+                        Log.d("jsonObject", jsonObject.toString())
                         val updateIdx = jsonObject.getString("idx")
                         val updateTitle = jsonObject.getString("title")
                         val updateId = jsonObject.getJSONObject("member").getString("id")
@@ -223,7 +233,7 @@ class AddPost : Fragment() {
 
                 val request = object : StringRequest(
                     Request.Method.POST,
-                    "http://192.168.219.41:8089/plantbutler/post/update",
+                    "http://192.168.219.60:8089/plantbutler/post/update",
                     { response ->
                         Log.d("updateResponse", response.toString())
                         Toast.makeText(context,"게시글 수정 완료",Toast.LENGTH_SHORT).show()
@@ -388,6 +398,10 @@ class AddPost : Fragment() {
 
                     if (imageUri != null) {
                         encodedImageString = getBase64FromUri(imageUri!!)
+                        ivAddImg.visibility = View.VISIBLE
+                        ivUploadIcon.visibility = View.GONE
+                        tvUploadText.visibility = View.GONE
+                        tvUploadSubText.visibility = View.GONE
                     }
                 }
             }
@@ -419,6 +433,12 @@ class AddPost : Fragment() {
                 data?.data?.let {
                     imageUri = it
                     ivAddImg.setImageURI(imageUri)
+                    if(imageUri != null) {
+                        ivAddImg.visibility = View.VISIBLE
+                        ivUploadIcon.visibility = View.GONE
+                        tvUploadText.visibility = View.GONE
+                        tvUploadSubText.visibility = View.GONE
+                    }
                 }
             }
         }

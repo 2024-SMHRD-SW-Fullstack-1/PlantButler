@@ -77,7 +77,7 @@ class Fragment1 : Fragment() {
 
         val request = StringRequest(
             Request.Method.POST,
-            "http://192.168.219.41:8089/plantbutler/post",
+            "http://192.168.219.60:8089/plantbutler/post",
             {response ->
                 Log.d("postLists", response.toString())
                 val jsonArray = JSONArray(response)
@@ -99,6 +99,8 @@ class Fragment1 : Fragment() {
                     }else {
                         img = ""
                     }
+
+                    Log.d("postsImg", img.toString())
 
                     if(result.getJSONObject("member").getString("img") != null) {
                         memImg = result.getJSONObject("member").getString("img")

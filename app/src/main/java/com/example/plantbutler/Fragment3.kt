@@ -109,7 +109,7 @@ class Fragment3 : Fragment() {
         rvMypageList.layoutManager = GridLayoutManager(mContext, 3)
         val request = object : StringRequest(
             Method.POST,
-            "http://192.168.219.41:8089/plantbutler/mypage",
+            "http://192.168.219.60:8089/plantbutler/mypage",
             { response ->
                 Log.d("mypageResponse", response.toString())
                 val jsonObject = JSONObject(response)

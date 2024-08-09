@@ -25,6 +25,7 @@
         android:layout_height="wrap_content"
         android:background="#FFFFFF"
         app:itemIconSize="30sp"
+        app:itemIconTint="@color/bnv_color_state_list"
         app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

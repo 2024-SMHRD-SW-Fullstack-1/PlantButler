@@ -38,7 +38,7 @@ class JoinActivity : AppCompatActivity() {
 
             val request = object: StringRequest(
                 Request.Method.POST,
-                "http://192.168.219.41:8089/plantbutler/join",
+                "http://192.168.219.60:8089/plantbutler/join",
                 {response->
                     Log.d("response",response.toString())
                     // 회원가입 후 메인화면

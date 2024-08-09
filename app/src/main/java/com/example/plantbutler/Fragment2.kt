@@ -66,7 +66,7 @@ class Fragment2 : Fragment(), MyPlantAdapter.OnItemClickListener {
     private fun loadPlantsFromServer() {
         memberId?.let { id ->
             // 사용자의 ID를 포함하여 요청 URL을 생성
-            val url = "http://192.168.219.41:8089/plantbutler/api/plants/$id"
+            val url = "http://192.168.219.60:8089/plantbutler/api/plants/$id"
             val requestQueue = Volley.newRequestQueue(activity)
 
             val jsonArrayRequest = JsonArrayRequest(

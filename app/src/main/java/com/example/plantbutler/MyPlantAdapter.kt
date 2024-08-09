@@ -13,6 +13,19 @@ class MyPlantAdapter(
     private val itemClickListener: OnItemClickListener
 ) : RecyclerView.Adapter<MyPlantAdapter.MyPlantViewHolder>() {
 
+    val plantImgList: ArrayList<String> = arrayListOf(
+        "https://images.pexels.com/photos/1003914/pexels-photo-1003914.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "https://images.pexels.com/photos/350349/pexels-photo-350349.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "https://images.pexels.com/photos/122611/pexels-photo-122611.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "https://images.pexels.com/photos/1454288/pexels-photo-1454288.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "https://images.pexels.com/photos/62403/pexels-photo-62403.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "https://images.pexels.com/photos/207518/pexels-photo-207518.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "https://images.pexels.com/photos/1179863/pexels-photo-1179863.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "https://images.pexels.com/photos/4936309/pexels-photo-4936309.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "https://images.pexels.com/photos/4803815/pexels-photo-4803815.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "https://images.pexels.com/photos/1252874/pexels-photo-1252874.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+    )
+
     interface OnItemClickListener {
         fun onItemClick(position: Int)
     }
@@ -26,8 +39,8 @@ class MyPlantAdapter(
         val myPlant = myPlantList[position]
         holder.plantName.text = myPlant.nickname
 
-        if (!myPlant.imageUrl.isNullOrEmpty()) {
-            Picasso.get().load(myPlant.imageUrl).into(holder.plantImage)
+        if (myPlant.plantIdx != 0) {
+            Picasso.get().load(plantImgList.get(myPlant.plantIdx + 1)).into(holder.plantImage)
         } else {
             holder.plantImage.setImageResource(R.drawable.basic) // 기본 이미지 설정
         }

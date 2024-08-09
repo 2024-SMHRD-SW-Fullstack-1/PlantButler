@@ -78,7 +78,7 @@ class EditActivity : AppCompatActivity() {
 
                 val request = object :StringRequest(
                     Request.Method.POST,
-                    "http://192.168.219.41:8089/plantbutler/mypage/profilechange",
+                    "http://192.168.219.60:8089/plantbutler/mypage/profilechange",
                     {response->
                         Log.d("profileImgChange",response.toString())
                         if(imageUri != null){
@@ -113,7 +113,7 @@ class EditActivity : AppCompatActivity() {
 
             val request = object :StringRequest(
                 Request.Method.POST,
-                "http://192.168.219.41:8089/plantbutler/mypage/nick",
+                "http://192.168.219.60:8089/plantbutler/mypage/nick",
                 {response->
                     Log.d("nickChange",response.toString())
                     Toast.makeText(this, "닉네임이 변경되었습니다", Toast.LENGTH_SHORT).show()
@@ -142,7 +142,7 @@ class EditActivity : AppCompatActivity() {
             }else{
                 val request = object:StringRequest(
                     Request.Method.POST,
-                    "http://192.168.219.41:8089/plantbutler/mypage/pw",
+                    "http://192.168.219.60:8089/plantbutler/mypage/pw",
                     {response->
                         Log.d("pwChange",response.toString())
                         Toast.makeText(this, "변경되었습니다", Toast.LENGTH_SHORT).show()

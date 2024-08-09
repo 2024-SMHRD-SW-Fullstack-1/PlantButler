@@ -98,7 +98,7 @@ class PlantAddActivity : AppCompatActivity() {
     }
 
     private fun loadPlantsFromServer() {
-        val url = "http://192.168.219.41:8089/plantbutler/api/plant_catalog"
+        val url = "http://192.168.219.60:8089/plantbutler/api/plant_catalog"
         val queue = Volley.newRequestQueue(this)
 
         val jsonArrayRequest = JsonArrayRequest(

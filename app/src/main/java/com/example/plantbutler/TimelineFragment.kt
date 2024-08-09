@@ -78,7 +78,7 @@ class TimelineFragment : Fragment() {
 
     private fun loadNotesFromServer() {
         if (myplantIdx != -1) {
-            val url = "http://192.168.219.41:8089/plantbutler/api/notes/$myplantIdx"
+            val url = "http://192.168.219.60:8089/plantbutler/api/notes/$myplantIdx"
             val queue = Volley.newRequestQueue(requireContext())
 
             // 로그 추가
@@ -114,7 +114,7 @@ class TimelineFragment : Fragment() {
     }
 
     private fun deleteNoteFromServer(note: Note) {
-        val url = "http://192.168.219.41:8089/plantbutler/api/notes/${note.id}"
+        val url = "http://192.168.219.60:8089/plantbutler/api/notes/${note.id}"
         val queue = Volley.newRequestQueue(requireContext())
 
         val stringRequest = StringRequest(
