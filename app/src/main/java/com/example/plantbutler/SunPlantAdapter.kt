@@ -30,7 +30,11 @@ class SunPlantAdapter(val context: Context, val plantList: ArrayList<SunPlant>) 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val plant = plantList[position]
         holder.tvName.text = plant.commonName
-        Glide.with(context).load(plant.imageUrl).into(holder.ivPlant)
+        Glide.with(context)
+            .load(plant.imageUrl)
+            .override(100, 100)  // 이미지 크기를 고정
+            .centerCrop()        // 이미지를 ImageView 크기에 맞게 자름
+            .into(holder.ivPlant)
 
         holder.itemView.setOnClickListener {
             val intent = Intent(context, SunDetailActivity::class.java).apply {

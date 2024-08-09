@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.Volley
+import com.example.plantbutler.SunMainActivity
 import org.json.JSONArray
 
 class Fragment2 : Fragment(), MyPlantAdapter.OnItemClickListener {

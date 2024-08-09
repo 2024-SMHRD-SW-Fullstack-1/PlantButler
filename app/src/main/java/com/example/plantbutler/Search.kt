@@ -1,5 +1,6 @@
 package com.example.plantbutler
 
+import ItemOffsetDecoration
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
@@ -47,6 +48,8 @@ class Search : Fragment() {
         queue = Volley.newRequestQueue(mContext)
 
         adapter = PostAdapter(mContext, postList)
+        val itemDecoration = ItemOffsetDecoration(16) // 마진 값 설정
+        rvPostList.addItemDecoration(itemDecoration)
         rvPostList.adapter = adapter
         rvPostList.layoutManager = LinearLayoutManager(mContext)
 
@@ -126,8 +129,6 @@ class Search : Fragment() {
                 }else {
                     tvSearchResult.setText("검색 결과가 없습니다.")
                 }
-
-                tvSearchResult.setText("")
 
             },
             { error ->

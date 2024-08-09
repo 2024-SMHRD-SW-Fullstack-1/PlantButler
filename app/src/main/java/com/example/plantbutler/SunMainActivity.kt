@@ -1,7 +1,11 @@
-package com.example.plantbutler
+package com.example.plantbutler;
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -9,6 +13,9 @@ import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.example.plantbutler.R
+import com.example.plantbutler.SunPlant
+import com.example.plantbutler.SunPlantAdapter
 import org.json.JSONObject
 
 class SunMainActivity : AppCompatActivity() {
@@ -17,6 +24,7 @@ class SunMainActivity : AppCompatActivity() {
     private lateinit var adapter: SunPlantAdapter
     private lateinit var plantList: ArrayList<SunPlant>
     private lateinit var rvPlants: RecyclerView
+    private lateinit var tvLoading: TextView
     private var currentPage = 1
     private val maxPage = 3
 
@@ -25,6 +33,7 @@ class SunMainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_sunmain)
 
         rvPlants = findViewById(R.id.rvPlants)
+        tvLoading = findViewById<TextView>(R.id.tvLoading)
         plantList = ArrayList()
         queue = Volley.newRequestQueue(this@SunMainActivity)
 
@@ -32,7 +41,13 @@ class SunMainActivity : AppCompatActivity() {
         rvPlants.adapter = adapter
         rvPlants.layoutManager = GridLayoutManager(this, 2)
 
+        Handler(Looper.getMainLooper()).postDelayed({
+            tvLoading.visibility = View.GONE
+        }, 2000)
+
         loadPlants(currentPage)
+
+
 
         rvPlants.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -44,8 +59,6 @@ class SunMainActivity : AppCompatActivity() {
             }
         })
     }
-
-
 
     private fun loadPlants(page: Int) {
         val url = "https://trefle.io/api/v1/plants?token=sC_m01lEXMmE0BMjxDRN-nzctY4N3nSnxZSLlvTQP4Y&page=$page"
