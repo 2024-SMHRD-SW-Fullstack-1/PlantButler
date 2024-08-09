@@ -77,7 +77,7 @@ class AddPost : Fragment() {
         val view = inflater.inflate(R.layout.fragment_add_post, container, false)
 
         queue = Volley.newRequestQueue(mContext)
-    
+
         // 로그인된 아이디 값 가져오기
         val sharedPreferences = activity?.getSharedPreferences("member", Context.MODE_PRIVATE)
         val memId = sharedPreferences?.getString("memId", "default_value").toString()
@@ -144,7 +144,7 @@ class AddPost : Fragment() {
 
                 val request = object : StringRequest(
                     Request.Method.POST,
-                    "http://192.168.219.60:8089/plantbutler/post/add",
+                    "http://192.168.219.41:8089/plantbutler/post/add",
                     { response ->
                         Log.d("addResponse", response.toString())
                         Toast.makeText(context,"게시글 등록 완료",Toast.LENGTH_SHORT).show()
@@ -223,7 +223,7 @@ class AddPost : Fragment() {
 
                 val request = object : StringRequest(
                     Request.Method.POST,
-                    "http://192.168.219.60:8089/plantbutler/post/update",
+                    "http://192.168.219.41:8089/plantbutler/post/update",
                     { response ->
                         Log.d("updateResponse", response.toString())
                         Toast.makeText(context,"게시글 수정 완료",Toast.LENGTH_SHORT).show()

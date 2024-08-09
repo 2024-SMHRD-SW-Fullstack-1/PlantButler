@@ -104,7 +104,7 @@ class PostAdapter(var context: Context, var postList: ArrayList<PostVOWithMemImg
 
             val request = StringRequest(
                 Request.Method.GET,
-                "http://192.168.219.60:8089/plantbutler/increViews/${post.idx}",
+                "http://192.168.219.41:8089/plantbutler/increViews/${post.idx}",
                 { response ->
                     Log.d("increViews", response.toString())
                     views = views?.plus(1)

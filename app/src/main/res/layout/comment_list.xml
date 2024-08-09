@@ -4,45 +4,62 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/rounded_background"
+    android:padding="16dp"
     android:paddingBottom="8dp">
 
-    <ImageView
-        android:id="@+id/ivCommentImg"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:elevation="4dp"
+        app:cardCornerRadius="75dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/ivCommentImg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
+    </androidx.cardview.widget.CardView>
+
 
     <TextView
         android:id="@+id/tvCommentNick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="4dp"
         android:text="소소데이"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/ivCommentImg"
-        app:layout_constraintStart_toEndOf="@+id/ivCommentImg" />
+        app:layout_constraintStart_toEndOf="@+id/cardView"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvCommentContent"
-        android:layout_width="wrap_content"
+        android:layout_width="400dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
         android:text="댓글 내용 입니다.댓글 내용 입니다.댓글 내용 입니다."
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/ivCommentImg"
-        app:layout_constraintTop_toBottomOf="@+id/ivCommentImg" />
+        app:layout_constraintStart_toEndOf="@+id/cardView"
+        app:layout_constraintTop_toBottomOf="@+id/tvCommentNick" />
 
     <TextView
         android:id="@+id/tvCommentDel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="4dp"
         android:text="삭제"
         android:textColor="#787878"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/tvCommentNick"
-        app:layout_constraintStart_toEndOf="@+id/tvCommentNick" />
+        app:layout_constraintStart_toEndOf="@+id/tvCommentNick"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

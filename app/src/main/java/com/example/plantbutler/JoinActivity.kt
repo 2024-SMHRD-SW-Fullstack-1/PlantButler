@@ -34,11 +34,11 @@ class JoinActivity : AppCompatActivity() {
             val inputId = etId.text.toString()
             val inputPw = etPw.text.toString()
             val inputNick = etNick.text.toString()
-            val pm = Member(inputId,inputPw,inputNick,null)
+            val pm = Member(inputId,inputPw,inputNick,"profile")
 
             val request = object: StringRequest(
                 Request.Method.POST,
-                "http://192.168.219.61:8089/plantbutler/join",
+                "http://192.168.219.41:8089/plantbutler/join",
                 {response->
                     Log.d("response",response.toString())
                     // 회원가입 후 메인화면

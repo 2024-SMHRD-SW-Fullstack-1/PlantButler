@@ -1,5 +1,6 @@
 package com.example.plantbutler
 
+import ItemOffsetDecoration
 import android.app.Activity
 import android.content.Context
 import android.graphics.BitmapFactory
@@ -59,7 +60,7 @@ class PostDetail : Fragment() {
         val memId = sharedPreferences?.getString("memId", "default_value")
 
         val rvCommentList: RecyclerView = view.findViewById(R.id.rvCommentList)
-        val tvDetailTile: TextView = view.findViewById(R.id.tvDetailTitle)
+        val tvDetailTile: TextView = view.findViewById(R.id.tvDetailTile)
         val tvDetailViews: TextView = view.findViewById(R.id.tvDetailViews)
         val tvDetailNick: TextView = view.findViewById(R.id.tvDetailNick)
         val tvDetailDate: TextView = view.findViewById(R.id.tvDetailDate)
@@ -160,30 +161,33 @@ class PostDetail : Fragment() {
         // 댓글 등록
         btnCommentAct.setOnClickListener {
             val content = etInputComment.text.toString()
-            val comment = CommentVO(null, idx, memId, content)
+            if (content != "") {
+                val comment = CommentVO(null, idx, memId, content)
 
-            val request = object : StringRequest(
-                Request.Method.POST,
-                "http://192.168.219.60:8089/plantbutler/comment/add",
-                { response ->
-                    Log.d("commentAdd", response.toString())
-                    Toast.makeText(context,"댓글 등록 완료",Toast.LENGTH_SHORT).show()
-                    refreshCommentList(memId, rvCommentList, idx)
-                    etInputComment.setText("") // 댓글 입력창 초기화
-                },
-                { error ->
-                    Log.d("error", error.toString())
-                }
-            ) {
-                override fun getParams(): MutableMap<String, String> {
-                    val params: MutableMap<String, String> = HashMap<String, String>()
+                val request = object : StringRequest(
+                    Request.Method.POST,
+                    "http://192.168.219.60:8089/plantbutler/comment/add",
+                    { response ->
+                        Log.d("commentAdd", response.toString())
+                        Toast.makeText(context,"댓글 등록 완료",Toast.LENGTH_SHORT).show()
+                        refreshCommentList(memId, rvCommentList, idx)
+                        etInputComment.setText("") // 댓글 입력창 초기화
+                    },
+                    { error ->
+                        Log.d("error", error.toString())
+                    }
+                ) {
+                    override fun getParams(): MutableMap<String, String> {
+                        val params: MutableMap<String, String> = HashMap<String, String>()
 
-                    params.put("addComment", Gson().toJson(comment))
-                    return params
+                        params.put("addComment", Gson().toJson(comment))
+                        return params
+                    }
                 }
+                queue.add(request)
+            }else {
+                Toast.makeText(context,"댓글 내용을 작성해주세요",Toast.LENGTH_SHORT).show()
             }
-            queue.add(request)
-
         }
 
         refreshCommentList(memId, rvCommentList, idx)
@@ -200,6 +204,8 @@ class PostDetail : Fragment() {
         // 댓글 목록
         commentList = ArrayList<CommentVOWithMemImg>()
         adapter = CommentAdapter(mContext, commentList, memId)
+        val itemDecoration = ItemOffsetDecoration(5) // 마진 값 설정
+        rvCommentList.addItemDecoration(itemDecoration)
         rvCommentList.adapter = adapter
         rvCommentList.layoutManager = LinearLayoutManager(mContext)
 

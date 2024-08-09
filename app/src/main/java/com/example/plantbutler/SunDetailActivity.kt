@@ -29,7 +29,11 @@ class SunDetailActivity : AppCompatActivity() {
         val plantImgPath = intent.getStringExtra("plantImgPath")
 
         tvName.text = plantName
-        Glide.with(this).load(plantImgPath).into(ivPlant)
+        Glide.with(this)
+            .load(plantImgPath)
+            .override(100, 100)
+            .centerCrop()
+            .into(ivPlant)
 
         if (plantId != -1) {
             loadPlantDetails(plantId.toString(), tvScientific, tvFamily, tvGenus, tvSynonyms)

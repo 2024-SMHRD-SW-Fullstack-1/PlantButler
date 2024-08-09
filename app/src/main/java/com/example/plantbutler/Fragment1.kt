@@ -3,7 +3,6 @@ package com.example.plantbutler
 import ItemOffsetDecoration
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -18,15 +17,7 @@ import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import org.json.JSONArray
-import java.lang.reflect.Type
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
 
 class Fragment1 : Fragment() {
 
@@ -86,7 +77,7 @@ class Fragment1 : Fragment() {
 
         val request = StringRequest(
             Request.Method.POST,
-            "http://192.168.219.60:8089/plantbutler/post",
+            "http://192.168.219.41:8089/plantbutler/post",
             {response ->
                 Log.d("postLists", response.toString())
                 val jsonArray = JSONArray(response)
