@@ -56,6 +56,9 @@ class Fragment3 : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_3, container, false)
+
+
+
         rvMypageList = view.findViewById<RecyclerView>(R.id.rvMypageList)
         postList = ArrayList<PostVOWithMemImg>()
         queue = Volley.newRequestQueue(mContext)
@@ -126,7 +129,7 @@ class Fragment3 : Fragment() {
                 //내 게시물
                 val myPostList = jsonObject.getJSONArray("postList")
                 for (i in 0 until jsonObject.getJSONArray("postList").length()) {
-                    val result = jsonObject.getJSONArray("postList").getJSONObject(1)
+                    val result = jsonObject.getJSONArray("postList").getJSONObject(i)
                     val idx = result.getString("idx").toInt()
                     val id = result.getJSONObject("member").getString("id")
                     val content = result.getString("content")

@@ -16,6 +16,7 @@ import com.android.volley.Request
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.Volley
 import com.example.plantbutler.SunMainActivity
+import kotlinx.coroutines.selects.select
 import org.json.JSONArray
 
 class Fragment2 : Fragment(), MyPlantAdapter.OnItemClickListener {
@@ -103,6 +104,8 @@ class Fragment2 : Fragment(), MyPlantAdapter.OnItemClickListener {
 
     override fun onItemClick(position: Int) {
         val selectedMyPlant = myPlantList[position]
+
+        Log.d("selectedMyPlant", selectedMyPlant.toString())
 
         // PlantDetailActivity로 이동하는 코드
         val intent = Intent(activity, PlantDetailActivity::class.java).apply {

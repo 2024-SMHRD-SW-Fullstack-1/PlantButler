@@ -34,6 +34,8 @@ import com.google.gson.Gson
 import java.io.ByteArrayOutputStream
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class EditActivity : AppCompatActivity() {
 
@@ -60,9 +62,9 @@ class EditActivity : AppCompatActivity() {
         val memPw = sharedPreferences?.getString("memPw", "pw")
         val memImg = sharedPreferences?.getString("memImg", "img")
 
+        //프로필 사진 가져오기
         val byteString:ByteArray = Base64.decode(memImg, Base64.DEFAULT)
         val byteArray = BitmapFactory.decodeByteArray(byteString, 0, byteString.size)
-
         binding.ivEdit.setImageBitmap(byteArray)
 
         // 프로필 사진 변경
@@ -83,8 +85,13 @@ class EditActivity : AppCompatActivity() {
                         Log.d("profileImgChange",response.toString())
                         if(imageUri != null){
                             Toast.makeText(this, "사진이 변경되었습니다", Toast.LENGTH_SHORT).show()
-                        }
+                            val sharedPreference = getSharedPreferences("member", MODE_PRIVATE)
+                            val editor = sharedPreference.edit()
 
+                            editor.remove("memImg")
+                            editor.putString("memImg",imageUri.toString())
+                            editor.apply()
+                        }
 
                     },
                     {error->
@@ -99,38 +106,44 @@ class EditActivity : AppCompatActivity() {
                     }
                 }
                 queue.add(request)
-            }else {
-                Toast.makeText(this, "사진이 변경이 취소되었습니다", Toast.LENGTH_SHORT).show()
             }
-
 
         }
         // 닉네임 변경
         binding.etEditNick.hint = memNick
         binding.btnEditNick.setOnClickListener {
-            val inputNick = binding.etEditNick.text
-            val pm = Member(memId.toString(),memPw.toString(),inputNick.toString(),null)
+            val inputNick = binding.etEditNick.text.toString()
+            val pm = Member(memId.toString(),memPw.toString(),inputNick,null)
+            if(inputNick != ""){
+                val request = object :StringRequest(
+                    Request.Method.POST,
+                    "http://192.168.219.60:8089/plantbutler/mypage/nick",
+                    {response->
+                        Log.d("nickChange",response.toString())
+                        Toast.makeText(this, "닉네임이 변경되었습니다", Toast.LENGTH_SHORT).show()
+                        val sharedPreference = getSharedPreferences("member", MODE_PRIVATE)
+                        val editor = sharedPreference.edit()
 
-            val request = object :StringRequest(
-                Request.Method.POST,
-                "http://192.168.219.60:8089/plantbutler/mypage/nick",
-                {response->
-                    Log.d("nickChange",response.toString())
-                    Toast.makeText(this, "닉네임이 변경되었습니다", Toast.LENGTH_SHORT).show()
+                        editor.remove("memNick")
+                        editor.putString("memNick",inputNick)
+                        editor.apply()
 
-                },
-                {error->
-                    Log.d("nickError",error.toString())
+                    },
+                    {error->
+                        Log.d("nickError",error.toString())
+                    }
+                ){
+                    override fun getParams():MutableMap<String,String>{
+                        val params:MutableMap<String,String> = HashMap<String,String>()
+                        params.put("Member", Gson().toJson(pm))
+
+                        return params
+                    }
                 }
-            ){
-                override fun getParams():MutableMap<String,String>{
-                    val params:MutableMap<String,String> = HashMap<String,String>()
-                    params.put("Member", Gson().toJson(pm))
-
-                    return params
-                }
+                queue.add(request)
+            }else{
+                Toast.makeText(this, "변경할 닉네임을 입력해주세요", Toast.LENGTH_SHORT).show()
             }
-            queue.add(request)
         }
         // 비밀번호 변경
         binding.btnEditPw.setOnClickListener {
@@ -139,6 +152,8 @@ class EditActivity : AppCompatActivity() {
             val pm = Member(memId.toString(),inputPw,null,null)
             if(inputPw != inputPw2){
                 Toast.makeText(this, "입력한 비밀번호가 일치하지 않습니다", Toast.LENGTH_SHORT).show()
+            }else if(inputPw =="" || inputPw2==""){
+                Toast.makeText(this, "변경할 비밀번호를 입력해주세요", Toast.LENGTH_SHORT).show()
             }else{
                 val request = object:StringRequest(
                     Request.Method.POST,
@@ -146,6 +161,12 @@ class EditActivity : AppCompatActivity() {
                     {response->
                         Log.d("pwChange",response.toString())
                         Toast.makeText(this, "변경되었습니다", Toast.LENGTH_SHORT).show()
+                        val sharedPreference = getSharedPreferences("member", MODE_PRIVATE)
+                        val editor = sharedPreference.edit()
+
+                        editor.remove("memPw")
+                        editor.putString("memPw",inputPw)
+                        editor.apply()
                     },
                     {error->
                         Log.d("pwError",error.toString())
@@ -174,10 +195,14 @@ class EditActivity : AppCompatActivity() {
             }else if(inputPw == inputPw2 && inputPw == memPw){
                 val request = object :StringRequest(
                     Request.Method.POST,
-                    "http://192.168.219.41:8089/plantbutler/mypage/delete",
+                    "http://192.168.219.60:8089/plantbutler/mypage/delete",
                     {response->
                         Toast.makeText(this, "탈퇴되었습니다", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this,LoginActivity::class.java)
+                        val sharedPreference = getSharedPreferences("member", MODE_PRIVATE)
+                        val editor = sharedPreference.edit()
+                        editor.clear()
+                        editor.apply()
+                        val intent = Intent(this,SplashActivity::class.java)
                         startActivity(intent)
                     },
                     {error->
@@ -193,7 +218,7 @@ class EditActivity : AppCompatActivity() {
                 }
                 queue.add(request)
             }else{
-                Toast.makeText(this, "입력한 비밀번호가 일치하지 않습니다", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "확인해주세요", Toast.LENGTH_SHORT).show()
             }
         }
 
